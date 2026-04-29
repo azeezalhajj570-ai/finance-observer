@@ -113,7 +113,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private fun checkNotificationAccess(): Boolean {
         val enabledPackages = Settings.Secure.getString(
             requireContext().contentResolver,
-            Settings.Secure.ENABLED_NOTIFICATION_LISTENERS
+            "enabled_notification_listeners"
         ) ?: ""
         return enabledPackages.contains(requireContext().packageName)
     }
@@ -125,7 +125,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     ) {
         if (requestCode == SMS_PERMISSION_REQUEST_CODE) {
             updatePermissionStatus()
-            (activity as? MainActivity)?.checkPermissionsAndRefresh()
+            (activity as? MainActivity)?.checkPermissionsAndLoad()
         }
     }
 
