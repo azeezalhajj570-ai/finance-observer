@@ -22,6 +22,7 @@ class ParserRegistry {
 
     init {
         // Register built-in parsers
+        registerParser(ArabicPaymentParser())
         registerParser(ChaseParser())
         registerParser(BankOfAmericaParser())
         registerParser(VenmoParser())

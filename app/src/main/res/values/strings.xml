@@ -9,4 +9,27 @@
     <string name="empty_state">No transactions yet. Make a purchase to see it here.</string>
     <string name="this_month">This Month</string>
     <string name="recent_transactions">Recent Transactions</string>
+    <string name="recent_label">Recent</string>
+    <string name="subscriptions_label">Subscriptions</string>
+    <string name="subscriptions_title">Subscriptions</string>
+    <string name="alerts_label">Alerts</string>
+    <string name="anomalies_label">Anomalies</string>
+    <string name="observations_label">● Observations</string>
+    <string name="active_status">⊙ Active</string>
+    <string name="setup_needed_status">⊙ Setup needed</string>
+    <string name="no_transactions_yet">No transactions yet</string>
+    <string name="no_subscriptions_yet">No subscriptions detected</string>
+    <string name="background_working">Finance Observer is working in the\nbackground. We\'ll show things as\nwe detect them.</string>
+    <string name="subscriptions_discovery">Recurring payments will appear here\nafter we detect 2 or more similar transactions.</string>
+    <string name="settings_permissions">Permissions</string>
+    <string name="permissions_desc_short">Grant notification and SMS access to track your spending.</string>
+    <string name="grant_notification_access">Grant Notification Access</string>
+    <string name="grant_sms_access">Grant SMS Access</string>
+    <string name="language">Language</string>
+    <string name="about_title">About</string>
+    <string name="about_desc">Finance Observer tracks your spending by analyzing SMS and notifications. All data stays on your device.</string>
+    <string name="change_language">Change Language</string>
+    <string name="change_language_msg">The app will restart to apply the %s language. Continue?</string>
+    <string name="restart">Restart</string>
+    <string name="cancel">Cancel</string>
 </resources>

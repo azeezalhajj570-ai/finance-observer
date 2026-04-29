@@ -49,7 +49,13 @@ class SmsReceiver : BroadcastReceiver() {
             "paid", "payment", "purchase", "charge", "spent",
             "received", "sent", "transfer", "deposit",
             "your card", "account ending", "transaction",
-            "$", "USD", "receipt", "confirmation"
+            "$", "USD", "receipt", "confirmation",
+            // Arabic keywords
+            "اضيف", "خصم", "تحويل", "دفع", "استلمت", "إيداع",
+            "سحبت", "إرسال", "استلام", "حوالة", "رصيد",
+            "ر.ي", "YER", "ر.س", "SAR", "ريال", "مبلغ",
+            "شحن", "شراء", "مشتريات", "بطاقة", "محفظة",
+            "صراف", "بنك", "جوال", "سداد", "اصدار"
         )
     }
 

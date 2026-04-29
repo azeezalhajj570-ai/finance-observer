@@ -64,7 +64,13 @@ class PaymentNotificationListener : NotificationListenerService() {
             "received", "sent", "transfer", "deposit", "withdrawal",
             "subscription", "renewal", "auto-pay", "autopay",
             "your card", "debit card", "credit card", "account ending",
-            "$", "USD", "transaction", "receipt"
+            "$", "USD", "transaction", "receipt",
+            // Arabic keywords
+            "اضيف", "خصم", "تحويل", "دفع", "استلمت", "إيداع",
+            "سحبت", "إرسال", "استلام", "حوالة", "رصيد",
+            "ر.ي", "YER", "ر.س", "SAR", "ريال", "مبلغ",
+            "شحن", "شراء", "مشتريات", "بطاقة", "محفظة",
+            "صراف", "بنك", "جوال", "سداد", "اصدار"
         )
     }
 

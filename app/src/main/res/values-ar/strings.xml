@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">مراقب المالية</string>
+    <string name="permission_notification_title">الوصول للإشعارات</string>
+    <string name="permission_notification_desc">يحتاج مراقب المالية إلى قراءة إشعاراتك لتتبع الإنفاق من تطبيقات البنوك والدفع.</string>
+    <string name="permission_sms_title">الوصول للرسائل</string>
+    <string name="permission_sms_desc">يحتاج مراقب المالية إلى قراءة رسائل SMS لالتقاط تفاصيل المشتريات.</string>
+    <string name="setup_button">منح الصلاحيات</string>
+    <string name="empty_state">لا توجد معاملات بعد. قم بعملية شراء لتظهر هنا.</string>
+    <string name="this_month">هذا الشهر</string>
+    <string name="recent_transactions">المعاملات الأخيرة</string>
+    <string name="recent_label">الأخيرة</string>
+    <string name="subscriptions_label">الاشتراكات</string>
+    <string name="subscriptions_title">الاشتراكات</string>
+    <string name="alerts_label">التنبيهات</string>
+    <string name="anomalies_label">حالات شاذة</string>
+    <string name="observations_label">● الملاحظات</string>
+    <string name="active_status">⊙ نشط</string>
+    <string name="setup_needed_status">⊙ يحتاج إعداد</string>
+    <string name="no_transactions_yet">لا توجد معاملات بعد</string>
+    <string name="no_subscriptions_yet">لم يتم اكتشاف اشتراكات</string>
+    <string name="background_working">مراقب المالية يعمل في الخلفية.\nسنعرض الأشياء فور اكتشافها.</string>
+    <string name="subscriptions_discovery">ستظهر المدفوعات المتكررة هنا\nبعد اكتشاف معاملتين متشابهتين أو أكثر.</string>
+    <string name="settings_permissions">الصلاحيات</string>
+    <string name="permissions_desc_short">امنح صلاحية الإشعارات والرسائل لتتبع إنفاقك.</string>
+    <string name="grant_notification_access">منح صلاحية الإشعارات</string>
+    <string name="grant_sms_access">منح صلاحية الرسائل</string>
+    <string name="language">اللغة</string>
+    <string name="about_title">حول التطبيق</string>
+    <string name="about_desc">يراقب مراقب المالية إنفاقك من خلال تحليل الرسائل والإشعارات. جميع البيانات تبقى على جهازك.</string>
+    <string name="change_language">تغيير اللغة</string>
+    <string name="change_language_msg">سيتم إعادة تشغيل التطبيق لتطبيق لغة %s. هل تريد المتابعة؟</string>
+    <string name="restart">إعادة تشغيل</string>
+    <string name="cancel">إلغاء</string>
+</resources>

@@ -20,6 +20,9 @@ class GenericParser : PaymentParser {
     // Match dollar amounts: $12.34, $1,234.56, 12.34 USD
     private val dollarPattern = Regex("\\$?([\\d,]+\\.\\d{2})\\s*(?:USD|EUR|GBP)?", RegexOption.IGNORE_CASE)
 
+    // Match Arabic amounts: 8000ر.ي, 1,200.00 YER, 500ر.س, 52.4 USD
+    private val arabicAmountPattern = Regex("([\\d,]+\\.?\\d{0,2})\\s*(?:ر\\.ي|YER|ر\\.س|SAR|ريال)", RegexOption.IGNORE_CASE)
+
     // Common payment keywords that suggest a transaction
     private val paymentKeywords = listOf(
         "paid", "payment", "purchase", "charge", "spent", "bought",
@@ -64,6 +67,30 @@ class GenericParser : PaymentParser {
         sourceApp: String? = null,
         sender: String? = null
     ): ParsedEvent? {
+        // Check for Arabic amounts first
+        val arabicAmounts = arabicAmountPattern.findAll(text).toList()
+        if (arabicAmounts.isNotEmpty()) {
+            val amount = arabicAmounts
+                .mapNotNull { it.groupValues[1].replace(",", "").toDoubleOrNull() }
+                .maxOrNull() ?: return null
+            val currency = detectArabicCurrency(text)
+            val merchant = extractArabicMerchantName(text)
+            return ParsedEvent(
+                source = if (sourceApp != null) SourceType.NOTIFICATION else SourceType.SMS,
+                sourceApp = sourceApp,
+                senderNumber = sender,
+                rawText = text,
+                capturedAt = Date(),
+                merchant = merchant,
+                amount = amount,
+                currency = currency,
+                date = Date(),
+                parserName = parserId,
+                confidenceScore = 0.4f,
+                isParsed = true
+            )
+        }
+
         // Find dollar amounts
         val amounts = dollarPattern.findAll(text).toList()
         if (amounts.isEmpty()) return null
@@ -99,7 +126,8 @@ class GenericParser : PaymentParser {
 
     private fun hasPaymentIndication(text: String): Boolean {
         return paymentKeywords.any { text.contains(it, ignoreCase = true) } ||
-               dollarPattern.containsMatchIn(text)
+               dollarPattern.containsMatchIn(text) ||
+               arabicAmountPattern.containsMatchIn(text)
     }
 
     private fun extractMerchantName(text: String, amount: Double): String {
@@ -133,5 +161,29 @@ class GenericParser : PaymentParser {
         } else {
             "Unknown"
         }
+    }
+
+    private fun detectArabicCurrency(text: String): String {
+        return when {
+            text.contains("ر.س") || text.contains("SAR", ignoreCase = true) -> "SAR"
+            text.contains("USD", ignoreCase = true) || text.contains("دولار") -> "USD"
+            else -> "YER"
+        }
+    }
+
+    private fun extractArabicMerchantName(text: String): String {
+        // Try to find merchant after "من" (from)
+        val fromMatch = Regex("من\\s+(.+)", RegexOption.IGNORE_CASE).find(text)
+        if (fromMatch != null) {
+            val name = fromMatch.groupValues[1].trim()
+            if (name.isNotBlank() && name.length < 60) return name
+        }
+        // Try to find merchant after "الى" or "ل" (to)
+        val toMatch = Regex("(?:الى|لـ?)\\s*(.+)", RegexOption.IGNORE_CASE).find(text)
+        if (toMatch != null) {
+            val name = toMatch.groupValues[1].trim()
+            if (name.isNotBlank() && name.length < 60) return name
+        }
+        return "Unknown"
     }
 }
