@@ -26,7 +26,7 @@
             android:text="Finance Observer"
             android:textSize="@dimen/text_headline"
             android:textColor="@color/accent_signature"
-            android:fontFamily="@font/cairo_bold"
+            android:fontFamily="sans-serif-medium"
             android:gravity="start" />
 
         <TextView
@@ -80,7 +80,7 @@
                         android:text="$0.00"
                         android:textSize="@dimen/text_amount_large"
                         android:textColor="@color/text_primary"
-                        android:fontFamily="@font/jetbrains_mono_medium"
+                        android:fontFamily="monospace"
                         android:layout_marginTop="@dimen/spacing_xxs" />
 
                     <TextView
@@ -139,7 +139,7 @@
                             android:text="$0.00/mo"
                             android:textSize="@dimen/text_caption"
                             android:textColor="@color/text_secondary"
-                            android:fontFamily="@font/jetbrains_mono_regular"
+                            android:fontFamily="monospace"
                             android:layout_marginTop="2dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

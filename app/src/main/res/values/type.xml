@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Base text appearance -->
+    <style name="TextAppearance.FinanceObserver" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
     <!-- Display/Headline font stack (Cairo preferred, fallback to system sans-serif-medium) -->
     <style name="TextAppearance.FinanceObserver.DisplayLarge">
         <item name="android:textSize">@dimen/text_display_large</item>

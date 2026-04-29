@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
     private fun checkNotificationAccess(): Boolean {
         val enabledPackages = Settings.Secure.getString(
             contentResolver,
-            Settings.Secure.ENABLED_NOTIFICATION_LISTENERS
+            "enabled_notification_listeners"
         ) ?: ""
         return enabledPackages.contains(packageName)
     }
@@ -162,13 +162,13 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val transactions = app.transactionRepository.getRecentTransactions(50)
             val totalSpending = app.transactionRepository.getTotalSpending(
-                Date(System.currentTimeMillis() - 30 * 24 * 60 * 60 * 1000),
+                Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000),
                 Date()
             )
             val subscriptions = app.subscriptionDetector.getActiveSubscriptions()
             val subscriptionCount = subscriptions.size
-            val anomalyCount = app.anomalyDetector.getActiveAnomalies().size
-            val subTotal = subscriptions.sumOf { it.amount }
+            val anomalyCount = app.anomalyDetector.getFlaggedTransactions().size
+            val subTotal = subscriptions.sumOf { it.estimatedAmount }
 
             val currencyFormat = NumberFormat.getCurrencyInstance(Locale.US)
             totalSpendingText.text = currencyFormat.format(totalSpending ?: 0.0)
@@ -212,9 +212,10 @@ class MainActivity : AppCompatActivity() {
 
             obsTime.text = "Subscription"
             obsTitle.text = sub.merchant
-            obsName.text = sub.name
-            obsAmount.text = NumberFormat.getCurrencyInstance(Locale.US).format(sub.amount)
-            obsMeta.text = "${sub.billingCycle} · Next: ${SimpleDateFormat("MMM dd", Locale.getDefault()).format(sub.nextBillingDate)}"
+            obsName.text = sub.merchant
+            obsAmount.text = NumberFormat.getCurrencyInstance(Locale.US).format(sub.estimatedAmount)
+            val nextBilling = sub.nextExpectedDate?.let { SimpleDateFormat("MMM dd", Locale.getDefault()).format(it) } ?: "Unknown"
+            obsMeta.text = "${sub.cycle.name.lowercase().replaceFirstChar { it.uppercase() }} · Next: $nextBilling"
             obsMeta.visibility = View.VISIBLE
 
             observationsContainer.addView(card)
