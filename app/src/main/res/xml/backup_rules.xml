@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Exclude database from backup for security -->
+    <exclude domain="database" path="finance_observer.db" />
+    <exclude domain="sharedpref" />
+</full-backup-content>

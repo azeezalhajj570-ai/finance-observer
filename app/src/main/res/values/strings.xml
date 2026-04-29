@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Finance Observer</string>
+    <string name="permission_notification_title">Notification Access</string>
+    <string name="permission_notification_desc">Finance Observer needs to read your notifications to track spending from bank and payment apps.</string>
+    <string name="permission_sms_title">SMS Access</string>
+    <string name="permission_sms_desc">Finance Observer needs to read SMS receipts to capture purchase details.</string>
+    <string name="setup_button">Grant Permissions</string>
+    <string name="empty_state">No transactions yet. Make a purchase to see it here.</string>
+    <string name="this_month">This Month</string>
+    <string name="recent_transactions">Recent Transactions</string>
+</resources>
