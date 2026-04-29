@@ -1,15 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#1B5E20</color>
-    <color name="primaryDark">#003300</color>
-    <color name="accent">#4CAF50</color>
-    <color name="background">#F5F5F5</color>
-    <color name="cardBackground">#FFFFFF</color>
-    <color name="primaryText">#212121</color>
-    <color name="secondaryText">#757575</color>
+    <!-- Core Background Colors -->
+    <color name="background">#0D0F13</color>
+    <color name="surface">#161921</color>
+    <color name="surface_elevated">#1E2230</color>
+    <color name="status_bar">#0A0C10</color>
+    <color name="navigation_bar">#0A0C10</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#E9ECF2</color>
+    <color name="text_secondary">#838A9E</color>
+    <color name="text_tertiary">#545B6E</color>
+
+    <!-- Accent Colors -->
+    <color name="accent_signature">#C4A56E</color>
+    <color name="accent_critical">#E05561</color>
+    <color name="accent_positive">#5BA37A</color>
+    <color name="accent_info">#5B8CC7</color>
+
+    <!-- Border & Ripple -->
+    <color name="border">#252936</color>
+    <color name="ripple">#33C4A56E</color>
+    <color name="elevation_overlay">#08FFFFFF</color>
+
+    <!-- Button Text -->
+    <color name="button_text">#0D0F13</color>
+
+    <!-- Legacy aliases for backward compatibility -->
+    <color name="primary">#C4A56E</color>
+    <color name="primaryDark">#0A0C10</color>
+    <color name="accent">#C4A56E</color>
+    <color name="primaryText">#E9ECF2</color>
+    <color name="secondaryText">#838A9E</color>
+    <color name="cardBackground">#161921</color>
     <color name="white">#FFFFFF</color>
-    <color name="error">#F44336</color>
+    <color name="error">#E05561</color>
     <color name="warning">#FF9800</color>
-    <color name="success">#4CAF50</color>
-    <color name="ic_launcher_background">#1B5E20</color>
+    <color name="success">#5BA37A</color>
+    <color name="ic_launcher_background">#0D0F13</color>
+
+    <!-- Category Badge Colors (muted, 20% opacity bases) -->
+    <color name="cat_food">#33C4A56E</color>
+    <color name="cat_transport">#335B8CC7</color>
+    <color name="cat_shopping">#335BA37A</color>
+    <color name="cat_subscription">#338B6D3A</color>
+    <color name="cat_streaming">#33E05561</color>
+    <color name="cat_default">#33545B6E</color>
 </resources>

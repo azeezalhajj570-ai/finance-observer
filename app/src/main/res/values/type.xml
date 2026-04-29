@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Display/Headline font stack (Cairo preferred, fallback to system sans-serif-medium) -->
+    <style name="TextAppearance.FinanceObserver.DisplayLarge">
+        <item name="android:textSize">@dimen/text_display_large</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.FinanceObserver.Headline">
+        <item name="android:textSize">@dimen/text_headline</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Title (Inter/Tajawal preferred, sans-serif-medium fallback) -->
+    <style name="TextAppearance.FinanceObserver.Title">
+        <item name="android:textSize">@dimen/text_title</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Body (Inter/Tajawal preferred, sans-serif fallback) -->
+    <style name="TextAppearance.FinanceObserver.Body">
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="TextAppearance.FinanceObserver.BodyMedium">
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Caption -->
+    <style name="TextAppearance.FinanceObserver.Caption">
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Amount (monospace) -->
+    <style name="TextAppearance.FinanceObserver.Amount">
+        <item name="android:textSize">@dimen/text_amount</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">monospace</item>
+    </style>
+
+    <style name="TextAppearance.FinanceObserver.AmountLarge">
+        <item name="android:textSize">@dimen/text_amount_large</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">monospace</item>
+    </style>
+</resources>

@@ -6,6 +6,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -15,7 +16,7 @@ import com.financeobserver.FinanceObserverApp
 import com.financeobserver.R
 import com.financeobserver.model.Transaction
 import com.financeobserver.service.PaymentNotificationListener
-import com.google.android.material.button.MaterialButton
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -23,70 +24,71 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/**
- * Main Activity - Dashboard showing financial overview and recent transactions.
- * 
- * Screens:
- * 1. Permission setup (if permissions not granted)
- * 2. Dashboard (financial health + recent activity)
- * 3. Transaction list
- */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var app: FinanceObserverApp
     private lateinit var transactionAdapter: TransactionAdapter
 
-    // UI elements
-    private lateinit var permissionCard: MaterialCardView
-    private lateinit var setupButton: MaterialButton
-    private lateinit var dashboardView: View
-    private lateinit var emptyView: TextView
+    private lateinit var headerTitle: TextView
+    private lateinit var headerStatus: TextView
     private lateinit var totalSpendingText: TextView
-    private lateinit var transactionCountText: TextView
+    private lateinit var spendingTrend: TextView
     private lateinit var subscriptionCountText: TextView
+    private lateinit var subscriptionTotal: TextView
+    private lateinit var anomalyCountText: TextView
+    private lateinit var observationsContainer: LinearLayout
+    private lateinit var transactionCountText: TextView
+    private lateinit var emptyView: View
     private lateinit var recyclerView: RecyclerView
+    private lateinit var bottomNav: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         app = application as FinanceObserverApp
+        initViews()
+        setupRecyclerView()
+        setupBottomNav()
+    }
 
-        // Initialize views
-        permissionCard = findViewById(R.id.permissionCard)
-        setupButton = findViewById(R.id.setupButton)
-        dashboardView = findViewById(R.id.dashboardView)
-        emptyView = findViewById(R.id.emptyView)
+    private fun initViews() {
+        headerTitle = findViewById(R.id.headerTitle)
+        headerStatus = findViewById(R.id.headerStatus)
         totalSpendingText = findViewById(R.id.totalSpendingText)
-        transactionCountText = findViewById(R.id.transactionCountText)
+        spendingTrend = findViewById(R.id.spendingTrend)
         subscriptionCountText = findViewById(R.id.subscriptionCountText)
+        subscriptionTotal = findViewById(R.id.subscriptionTotal)
+        anomalyCountText = findViewById(R.id.anomalyCountText)
+        observationsContainer = findViewById(R.id.observationsContainer)
+        transactionCountText = findViewById(R.id.transactionCountText)
+        emptyView = findViewById(R.id.emptyView)
         recyclerView = findViewById(R.id.transactionRecyclerView)
+        bottomNav = findViewById(R.id.bottomNav)
+    }
 
-        // Setup RecyclerView
+    private fun setupRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         transactionAdapter = TransactionAdapter(emptyList())
         recyclerView.adapter = transactionAdapter
+    }
 
-        // Setup button click
-        setupButton.setOnClickListener {
-            val hasNotificationAccess = checkNotificationAccess()
-            val hasSmsPermission = checkSelfPermission(android.Manifest.permission.READ_SMS) == android.content.pm.PackageManager.PERMISSION_GRANTED
-
-            when {
-                !hasSmsPermission -> {
-                    requestPermissions(
-                        arrayOf(android.Manifest.permission.READ_SMS, android.Manifest.permission.RECEIVE_SMS),
-                        SMS_PERMISSION_REQUEST_CODE
-                    )
+    private fun setupBottomNav() {
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> true
+                R.id.nav_transactions -> {
+                    recyclerView.smoothScrollToPosition(0)
+                    true
                 }
-                !hasNotificationAccess -> {
+                R.id.nav_subscriptions -> true
+                R.id.nav_settings -> {
                     openNotificationAccessSettings()
+                    true
                 }
+                else -> false
             }
         }
-
-        // Check permissions and load data
-        checkPermissionsAndLoad()
     }
 
     override fun onResume() {
@@ -94,31 +96,50 @@ class MainActivity : AppCompatActivity() {
         checkPermissionsAndLoad()
     }
 
+    private fun checkNotificationAccess(): Boolean {
+        val enabledPackages = Settings.Secure.getString(
+            contentResolver,
+            Settings.Secure.ENABLED_NOTIFICATION_LISTENERS
+        ) ?: ""
+        return enabledPackages.contains(packageName)
+    }
+
     private fun checkPermissionsAndLoad() {
         val hasNotificationAccess = checkNotificationAccess()
-        val hasSmsPermission = checkSelfPermission(android.Manifest.permission.READ_SMS) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        val hasSmsPermission = checkSelfPermission(
+            android.Manifest.permission.READ_SMS
+        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
 
         if (!hasNotificationAccess || !hasSmsPermission) {
-            permissionCard.visibility = View.VISIBLE
-            dashboardView.visibility = View.GONE
-            setupButton.text = when {
-                !hasNotificationAccess && !hasSmsPermission -> "Grant Permissions"
-                !hasNotificationAccess -> "Enable Notification Access"
-                else -> "Grant SMS Permission"
-            }
+            headerStatus.text = "⊙ Setup needed"
+            headerStatus.setTextColor(getColor(R.color.accent_critical))
+            showPermissionPrompt()
         } else {
-            permissionCard.visibility = View.GONE
-            dashboardView.visibility = View.VISIBLE
+            headerStatus.text = "⊙ Active"
+            headerStatus.setTextColor(getColor(R.color.accent_positive))
             loadData()
         }
     }
 
-    private fun checkNotificationAccess(): Boolean {
-        val enabledPackages = Settings.Secure.getString(
-            contentResolver,
-            "enabled_notification_listeners"
-        ) ?: ""
-        return enabledPackages.contains(packageName)
+    private fun showPermissionPrompt() {
+        val inflater = LayoutInflater.from(this)
+        observationsContainer.removeAllViews()
+
+        val card = inflater.inflate(R.layout.item_observation, observationsContainer, false) as MaterialCardView
+        val obsTime = card.findViewById<TextView>(R.id.obsTime)
+        val obsTitle = card.findViewById<TextView>(R.id.obsTitle)
+        val obsName = card.findViewById<TextView>(R.id.obsName)
+        val obsAmount = card.findViewById<TextView>(R.id.obsAmount)
+
+        obsTime.text = "Setup"
+        obsTitle.text = "Permissions Required"
+        obsName.text = "Finance Observer needs notification and SMS access to track your spending. All data stays on your device."
+        obsName.textSize = 13f
+        obsAmount.visibility = View.GONE
+
+        observationsContainer.addView(card)
+        emptyView.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -144,27 +165,26 @@ class MainActivity : AppCompatActivity() {
                 Date(System.currentTimeMillis() - 30 * 24 * 60 * 60 * 1000),
                 Date()
             )
-            val subscriptionCount = app.subscriptionDetector.getActiveSubscriptions().size
+            val subscriptions = app.subscriptionDetector.getActiveSubscriptions()
+            val subscriptionCount = subscriptions.size
+            val anomalyCount = app.anomalyDetector.getActiveAnomalies().size
+            val subTotal = subscriptions.sumOf { it.amount }
 
-            // Update UI
             val currencyFormat = NumberFormat.getCurrencyInstance(Locale.US)
             totalSpendingText.text = currencyFormat.format(totalSpending ?: 0.0)
+            subscriptionCountText.text = "$subscriptionCount active"
+            subscriptionTotal.text = "${currencyFormat.format(subTotal)}/mo"
+            anomalyCountText.text = "$anomalyCount"
             transactionCountText.text = "${transactions.size} transactions"
-            subscriptionCountText.text = "${subscriptionCount} subscriptions"
+
+            spendingTrend.text = "vs last month"
+
+            observationsContainer.removeAllViews()
+            buildObservations(transactions, subscriptions, anomalyCount)
 
             if (transactions.isEmpty()) {
                 emptyView.visibility = View.VISIBLE
                 recyclerView.visibility = View.GONE
-                emptyView.text = """
-                    I'm watching for your financial activity.
-                    
-                    When you make a purchase, I'll capture it from:
-                    • Bank app notifications
-                    • Payment app alerts (Venmo, PayPal, etc.)
-                    • SMS receipts
-                    
-                    Try making a test purchase to see me in action!
-                """.trimIndent()
             } else {
                 emptyView.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
@@ -173,11 +193,78 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun buildObservations(
+        transactions: List<Transaction>,
+        subscriptions: List<com.financeobserver.model.Subscription>,
+        anomalyCount: Int
+    ) {
+        val inflater = LayoutInflater.from(this)
+
+        // Show subscription observations
+        for (sub in subscriptions.take(3)) {
+            val card = inflater.inflate(R.layout.item_observation, observationsContainer, false) as MaterialCardView
+            val obsTime = card.findViewById<TextView>(R.id.obsTime)
+            val obsTitle = card.findViewById<TextView>(R.id.obsTitle)
+            val obsName = card.findViewById<TextView>(R.id.obsName)
+            val obsAmount = card.findViewById<TextView>(R.id.obsAmount)
+            val obsMeta = card.findViewById<TextView>(R.id.obsMeta)
+
+            obsTime.text = "Subscription"
+            obsTitle.text = sub.merchant
+            obsName.text = sub.name
+            obsAmount.text = NumberFormat.getCurrencyInstance(Locale.US).format(sub.amount)
+            obsMeta.text = "${sub.billingCycle} · Next: ${SimpleDateFormat("MMM dd", Locale.getDefault()).format(sub.nextBillingDate)}"
+            obsMeta.visibility = View.VISIBLE
+
+            observationsContainer.addView(card)
+        }
+
+        // Show anomaly observations
+        if (anomalyCount > 0) {
+            val card = inflater.inflate(R.layout.item_observation, observationsContainer, false) as MaterialCardView
+            val obsTime = card.findViewById<TextView>(R.id.obsTime)
+            val obsTitle = card.findViewById<TextView>(R.id.obsTitle)
+            val obsName = card.findViewById<TextView>(R.id.obsName)
+            val obsAmount = card.findViewById<TextView>(R.id.obsAmount)
+
+            obsTime.text = "Alert"
+            obsTitle.text = "$anomalyCount spending anomal${if (anomalyCount == 1) "y" else "ies"} detected"
+            obsTitle.setTextColor(getColor(R.color.accent_critical))
+            obsName.text = "Review your recent transactions"
+            obsName.textSize = 13f
+            obsAmount.visibility = View.GONE
+
+            observationsContainer.addView(card)
+        }
+
+        // Show recent transaction observations (latest 2)
+        if (transactions.isNotEmpty()) {
+            for (txn in transactions.take(2)) {
+                val card = inflater.inflate(R.layout.item_observation, observationsContainer, false) as MaterialCardView
+                val obsTime = card.findViewById<TextView>(R.id.obsTime)
+                val obsTitle = card.findViewById<TextView>(R.id.obsTitle)
+                val obsName = card.findViewById<TextView>(R.id.obsName)
+                val obsAmount = card.findViewById<TextView>(R.id.obsAmount)
+                val obsMeta = card.findViewById<TextView>(R.id.obsMeta)
+
+                obsTime.text = SimpleDateFormat("MMM dd, h:mm a", Locale.getDefault()).format(txn.timestamp)
+                obsTitle.visibility = View.GONE
+                obsName.text = txn.merchant
+                obsAmount.text = NumberFormat.getCurrencyInstance(Locale.US).format(txn.amount)
+                obsMeta.text = when (txn.source) {
+                    com.financeobserver.model.SourceType.NOTIFICATION -> "Notification"
+                    com.financeobserver.model.SourceType.SMS -> "SMS"
+                    com.financeobserver.model.SourceType.MANUAL -> "Manual"
+                }
+                obsMeta.visibility = View.VISIBLE
+
+                observationsContainer.addView(card)
+            }
+        }
+    }
 }
 
-/**
- * Adapter for displaying transactions in a RecyclerView.
- */
 class TransactionAdapter(
     private val transactions: List<Transaction>
 ) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
@@ -185,11 +272,44 @@ class TransactionAdapter(
     private val dateFormat = SimpleDateFormat("MMM dd, h:mm a", Locale.getDefault())
     private val currencyFormat = NumberFormat.getCurrencyInstance(Locale.US)
 
+    private val categoryColors = mapOf(
+        "food" to R.color.cat_food,
+        "transport" to R.color.cat_transport,
+        "shopping" to R.color.cat_shopping,
+        "subscription" to R.color.cat_subscription,
+        "streaming" to R.color.cat_streaming,
+        "default" to R.color.cat_default
+    )
+
+    private fun getCategoryLabel(txn: Transaction): String = when {
+        txn.category?.contains("food", true) == true || txn.category?.contains("restaurant", true) == true -> "FD"
+        txn.category?.contains("transport", true) == true -> "TR"
+        txn.category?.contains("shopping", true) == true -> "SH"
+        txn.category?.contains("subscription", true) == true -> "SB"
+        txn.merchant.contains("Netflix", true) || txn.merchant.contains("Spotify", true) || txn.merchant.contains("Hulu", true) -> "ST"
+        txn.merchant.contains("Amazon", true) -> "SH"
+        txn.merchant.contains("Starbucks", true) || txn.merchant.contains("Coffee", true) -> "FD"
+        txn.merchant.contains("Uber", true) || txn.merchant.contains("Lyft", true) -> "TR"
+        else -> "TX"
+    }
+
+    private fun getCategoryColor(txn: Transaction): Int {
+        val key = when {
+            txn.category?.contains("food", true) == true || txn.category?.contains("restaurant", true) == true -> "food"
+            txn.category?.contains("transport", true) == true -> "transport"
+            txn.category?.contains("shopping", true) == true -> "shopping"
+            txn.category?.contains("subscription", true) == true || txn.merchant.contains("Netflix", true) -> "subscription"
+            else -> "default"
+        }
+        return categoryColors[key] ?: R.color.cat_default
+    }
+
     class TransactionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val merchantText: TextView = view.findViewById(R.id.merchantText)
-        val amountText: TextView = view.findViewById(R.id.amountText)
-        val dateText: TextView = view.findViewById(R.id.dateText)
-        val sourceText: TextView = view.findViewById(R.id.sourceText)
+        val txnCategoryBg: View = view.findViewById(R.id.txnCategoryBg)
+        val txnCategoryIcon: TextView = view.findViewById(R.id.txnCategoryIcon)
+        val txnName: TextView = view.findViewById(R.id.txnName)
+        val txnMeta: TextView = view.findViewById(R.id.txnMeta)
+        val txnAmount: TextView = view.findViewById(R.id.txnAmount)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
@@ -199,19 +319,27 @@ class TransactionAdapter(
     }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
-        val transaction = transactions[position]
-        holder.merchantText.text = transaction.merchant
-        holder.amountText.text = currencyFormat.format(transaction.amount)
-        holder.dateText.text = dateFormat.format(transaction.timestamp)
-        holder.sourceText.text = when (transaction.source) {
-            com.financeobserver.model.SourceType.NOTIFICATION -> "Notification"
-            com.financeobserver.model.SourceType.SMS -> "SMS"
-            com.financeobserver.model.SourceType.MANUAL -> "Manual"
-        }
+        val txn = transactions[position]
+        val ctx = holder.itemView.context
 
-        // Color code by amount
-        if (transaction.isFlagged) {
-            holder.amountText.setTextColor(holder.itemView.context.getColor(android.R.color.holo_red_dark))
+        holder.txnName.text = txn.merchant
+        holder.txnAmount.text = currencyFormat.format(txn.amount)
+        holder.txnMeta.text = "${dateFormat.format(txn.timestamp)} · ${
+            when (txn.source) {
+                com.financeobserver.model.SourceType.NOTIFICATION -> "Notification"
+                com.financeobserver.model.SourceType.SMS -> "SMS"
+                com.financeobserver.model.SourceType.MANUAL -> "Manual"
+            }
+        }"
+
+        holder.txnCategoryIcon.text = getCategoryLabel(txn)
+        holder.txnCategoryIcon.setTextColor(ctx.getColor(R.color.text_primary))
+        holder.txnCategoryBg.background.setTint(ctx.getColor(getCategoryColor(txn)))
+
+        if (txn.isFlagged) {
+            holder.txnAmount.setTextColor(ctx.getColor(android.R.color.holo_red_dark))
+        } else {
+            holder.txnAmount.setTextColor(ctx.getColor(R.color.text_primary))
         }
     }
 
