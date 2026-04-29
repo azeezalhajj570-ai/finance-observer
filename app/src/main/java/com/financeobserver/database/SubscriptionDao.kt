@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.financeobserver.model.Subscription
+import java.util.Date
 
 @Dao
 interface SubscriptionDao {
@@ -26,10 +27,10 @@ interface SubscriptionDao {
     suspend fun getByMerchant(merchant: String): Subscription?
 
     @Query("SELECT * FROM subscriptions WHERE nextExpectedDate <= :date AND isActive = 1")
-    suspend fun getUpcomingSubscriptions(date: java.util.Date): List<Subscription>
+    suspend fun getUpcomingSubscriptions(date: Date): List<Subscription>
 
     @Query("UPDATE subscriptions SET isActive = 0, isCancelled = 1, cancelledDate = :date WHERE id = :id")
-    suspend fun cancelSubscription(id: Long, date: java.util.Date)
+    suspend fun cancelSubscription(id: Long, date: Date)
 
     @Query("UPDATE subscriptions SET userConfirmed = 1 WHERE id = :id")
     suspend fun confirmSubscription(id: Long)

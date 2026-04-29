@@ -8,10 +8,6 @@ import androidx.room.Update
 import com.financeobserver.model.Transaction
 import java.util.Date
 
-/**
- * Data Access Object for transactions.
- * All database operations for the Transaction entity.
- */
 @Dao
 interface TransactionDao {
 
@@ -41,7 +37,6 @@ interface TransactionDao {
     """)
     suspend fun countByDedupKey(merchant: String, amount: Double, cutoffTime: Date): Int
 
-    // Overloaded version for string-based dedup key
     @Query("""
         SELECT COUNT(*) FROM transactions 
         WHERE rawText LIKE '%' || :dedupKey || '%' 
@@ -60,7 +55,7 @@ interface TransactionDao {
         GROUP BY category 
         ORDER BY total DESC
     """)
-    suspend fun getSpendingByCategory(startDate: Date, endDate: Date): List<Pair<String, Double>>
+    suspend fun getSpendingByCategory(startDate: Date, endDate: Date): List<SpendingByCategory>
 
     @Query("SELECT COUNT(*) FROM transactions")
     suspend fun getTransactionCount(): Int
@@ -85,7 +80,7 @@ interface TransactionDao {
         HAVING count >= :minOccurrences 
         ORDER BY count DESC
     """)
-    suspend fun getFrequentMerchants(sinceDate: Date, minOccurrences: Int = 2): List<Triple<String, Int, Double>>
+    suspend fun getFrequentMerchants(sinceDate: Date, minOccurrences: Int = 2): List<FrequentMerchant>
 
     @Query("SELECT * FROM transactions WHERE merchant LIKE '%' || :query || '%' ORDER BY timestamp DESC LIMIT 20")
     suspend fun searchByMerchant(query: String): List<Transaction>

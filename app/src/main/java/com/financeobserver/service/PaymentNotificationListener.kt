@@ -8,6 +8,7 @@ import android.service.notification.StatusBarNotification
 import android.util.Log
 import com.financeobserver.FinanceObserverApp
 import com.financeobserver.model.ParsedEvent
+import com.financeobserver.parser.ParserRegistry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,9 +29,9 @@ import kotlinx.coroutines.launch
 class PaymentNotificationListener : NotificationListenerService() {
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private val app: FinanceObserverApp by lazy { application as FinanceObserverApp }
-    private val parserRegistry: ParserRegistry by lazy { app.parserRegistry }
-    private val transactionRepository: TransactionRepository by lazy { app.transactionRepository }
+    private val app: FinanceObserverApp get() = application as FinanceObserverApp
+    private val parserRegistry: ParserRegistry get() = app.parserRegistry
+    private val transactionRepository: TransactionRepository get() = app.transactionRepository
 
     companion object {
         private const val TAG = "PaymentNotificationListener"
@@ -154,11 +155,10 @@ class PaymentNotificationListener : NotificationListenerService() {
         )
 
         // Check for duplicates before storing
-        val dedupKey = parsedEvent.computeDedupKey()
-        val isDuplicate = transactionRepository.isDuplicate(dedupKey, lookbackMinutes = 5)
+        val isDuplicate = transactionRepository.isDuplicate(parsedEvent.merchant, parsedEvent.amount, lookbackMinutes = 5)
 
         if (isDuplicate) {
-            Log.d(TAG, "Duplicate notification detected, skipping: $dedupKey")
+            Log.d(TAG, "Duplicate notification detected, skipping: ${parsedEvent.merchant} ${parsedEvent.amount}")
             return
         }
 

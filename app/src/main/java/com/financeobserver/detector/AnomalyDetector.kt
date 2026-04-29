@@ -44,7 +44,7 @@ class AnomalyDetector(
             if (history.size < MIN_TRANSACTIONS_FOR_BASELINE) return@withContext
 
             // Check for amount anomaly
-            val anomaly = detectAmountAnomaly(amount, history)
+            val anomaly = detectAmountAnomaly(amount, history, merchant)
             if (anomaly != null) {
                 // Flag the most recent transaction
                 val latestTransaction = history.firstOrNull()
@@ -60,7 +60,8 @@ class AnomalyDetector(
      */
     private fun detectAmountAnomaly(
         amount: Double,
-        history: List<Transaction>
+        history: List<Transaction>,
+        merchant: String
     ): AnomalyResult? {
         val amounts = history.map { it.amount }
         val mean = amounts.average()

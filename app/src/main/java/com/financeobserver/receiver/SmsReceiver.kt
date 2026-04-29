@@ -81,8 +81,7 @@ class SmsReceiver : BroadcastReceiver() {
                 val parsedEvent = app.parserRegistry.parseSms(sender, fullMessage)
 
                 // Check for duplicates
-                val dedupKey = parsedEvent.computeDedupKey()
-                val isDuplicate = app.transactionRepository.isDuplicate(dedupKey, lookbackMinutes = 5)
+                val isDuplicate = app.transactionRepository.isDuplicate(parsedEvent.merchant, parsedEvent.amount, lookbackMinutes = 5)
 
                 if (!isDuplicate) {
                     val transactionId = app.transactionRepository.insertParsedEvent(parsedEvent)
@@ -94,7 +93,7 @@ class SmsReceiver : BroadcastReceiver() {
                         app.anomalyDetector.analyzeNewTransaction(parsedEvent)
                     }
                 } else {
-                    Log.d(TAG, "Duplicate SMS transaction, skipping: $dedupKey")
+                    Log.d(TAG, "Duplicate SMS transaction, skipping: ${parsedEvent.merchant} ${parsedEvent.amount}")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error processing SMS from $sender", e)

@@ -44,10 +44,11 @@ class TransactionRepository(
      * Check if a transaction is a duplicate based on dedup key.
      * Looks back within the specified time window.
      */
-    suspend fun isDuplicate(dedupKey: String, lookbackMinutes: Int): Boolean {
+    suspend fun isDuplicate(merchant: String?, amount: Double?, lookbackMinutes: Int): Boolean {
         return withContext(Dispatchers.IO) {
+            if (merchant == null || amount == null) return@withContext false
             val cutoffTime = Date(System.currentTimeMillis() - lookbackMinutes * 60 * 1000)
-            transactionDao.countByDedupKey(dedupKey, cutoffTime) > 0
+            transactionDao.countByDedupKey(merchant, amount, cutoffTime) > 0
         }
     }
 
@@ -72,7 +73,7 @@ class TransactionRepository(
     /**
      * Get total spending for a date range.
      */
-    suspend fun getTotalSpending(startDate: Date, endDate: Date): Double {
+    suspend fun getTotalSpending(startDate: Date, endDate: Date): Double? {
         return withContext(Dispatchers.IO) {
             transactionDao.getTotalSpending(startDate, endDate)
         }
@@ -84,7 +85,7 @@ class TransactionRepository(
     suspend fun getSpendingByCategory(startDate: Date, endDate: Date): Map<String, Double> {
         return withContext(Dispatchers.IO) {
             transactionDao.getSpendingByCategory(startDate, endDate)
-                .associate { it.first to it.second }
+                .associate { it.category to it.total }
         }
     }
 

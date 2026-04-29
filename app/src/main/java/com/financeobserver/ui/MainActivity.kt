@@ -69,7 +69,20 @@ class MainActivity : AppCompatActivity() {
 
         // Setup button click
         setupButton.setOnClickListener {
-            openNotificationAccessSettings()
+            val hasNotificationAccess = checkNotificationAccess()
+            val hasSmsPermission = checkSelfPermission(android.Manifest.permission.READ_SMS) == android.content.pm.PackageManager.PERMISSION_GRANTED
+
+            when {
+                !hasSmsPermission -> {
+                    requestPermissions(
+                        arrayOf(android.Manifest.permission.READ_SMS, android.Manifest.permission.RECEIVE_SMS),
+                        SMS_PERMISSION_REQUEST_CODE
+                    )
+                }
+                !hasNotificationAccess -> {
+                    openNotificationAccessSettings()
+                }
+            }
         }
 
         // Check permissions and load data
@@ -103,14 +116,25 @@ class MainActivity : AppCompatActivity() {
     private fun checkNotificationAccess(): Boolean {
         val enabledPackages = Settings.Secure.getString(
             contentResolver,
-            Settings.Secure.ENABLED_NOTIFICATION_LISTENERS
+            "enabled_notification_listeners"
         ) ?: ""
         return enabledPackages.contains(packageName)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == SMS_PERMISSION_REQUEST_CODE) {
+            checkPermissionsAndLoad()
+        }
     }
 
     private fun openNotificationAccessSettings() {
         val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
         startActivity(intent)
+    }
+
+    companion object {
+        private const val SMS_PERMISSION_REQUEST_CODE = 1001
     }
 
     private fun loadData() {
