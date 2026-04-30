@@ -20,8 +20,8 @@ class ParserRegistryTest {
     @Test
     fun `registry has all built-in parsers registered`() {
         val stats = registry.getStats()
-        // 10 specific parsers + 1 generic fallback = 11
-        assertEquals(11, stats.registeredParsers)
+        // 11 specific parsers + 1 generic fallback = 12
+        assertEquals(12, stats.registeredParsers)
     }
 
     @Test

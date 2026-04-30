@@ -151,7 +151,7 @@ class PaymentNotificationListener : NotificationListenerService() {
             return
         }
 
-        Log.d(TAG, "Processing notification from $packageName: ${fullText.take(100)}")
+        Log.d(TAG, "Processing notification from $packageName (length=${fullText.length})")
 
         // Parse the notification using the registry
         val parsedEvent = parserRegistry.parseNotification(
@@ -160,16 +160,13 @@ class PaymentNotificationListener : NotificationListenerService() {
             text = fullText
         )
 
-        // Check for duplicates before storing
-        val isDuplicate = transactionRepository.isDuplicate(parsedEvent.merchant, parsedEvent.amount, lookbackMinutes = 5)
+        // Atomic check-and-insert to prevent race conditions
+        val transactionId = transactionRepository.tryInsert(parsedEvent)
 
-        if (isDuplicate) {
+        if (transactionId < 0) {
             Log.d(TAG, "Duplicate notification detected, skipping: ${parsedEvent.merchant} ${parsedEvent.amount}")
             return
         }
-
-        // Store the parsed event
-        val transactionId = transactionRepository.insertParsedEvent(parsedEvent)
 
         Log.d(TAG, "Stored transaction: id=$transactionId, merchant=${parsedEvent.merchant}, amount=${parsedEvent.amount}, parsed=${parsedEvent.isParsed}")
 

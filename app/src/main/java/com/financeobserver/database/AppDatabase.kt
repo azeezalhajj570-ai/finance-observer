@@ -39,7 +39,7 @@ abstract class AppDatabase : RoomDatabase() {
                 AppDatabase::class.java,
                 DATABASE_NAME
             )
-                .fallbackToDestructiveMigration()
+                .addMigrations(MIGRATION_1_2)
                 .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
                 .addCallback(object : RoomDatabase.Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {

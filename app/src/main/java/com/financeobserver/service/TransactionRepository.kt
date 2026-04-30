@@ -2,11 +2,12 @@ package com.financeobserver.service
 
 import com.financeobserver.database.TransactionDao
 import com.financeobserver.model.ParsedEvent
-import com.financeobserver.model.SourceType
 import com.financeobserver.model.Transaction
 import com.financeobserver.model.TransactionType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.Date
 
 /**
@@ -16,6 +17,8 @@ import java.util.Date
 class TransactionRepository(
     private val transactionDao: TransactionDao
 ) {
+    private val dedupMutex = Mutex()
+
     /**
      * Insert a parsed event as a transaction.
      * Returns the new transaction ID.
@@ -41,14 +44,34 @@ class TransactionRepository(
     }
 
     /**
-     * Check if a transaction is a duplicate based on dedup key.
-     * Looks back within the specified time window.
+     * Atomically check for duplicates and insert if not duplicate.
+     * Returns the new transaction ID, or -1 if duplicate.
      */
-    suspend fun isDuplicate(merchant: String?, amount: Double?, lookbackMinutes: Int): Boolean {
-        return withContext(Dispatchers.IO) {
-            if (merchant == null || amount == null) return@withContext false
-            val cutoffTime = Date(System.currentTimeMillis() - lookbackMinutes * 60 * 1000)
-            transactionDao.countByDedupKey(merchant, amount, cutoffTime) > 0
+    suspend fun tryInsert(event: ParsedEvent, lookbackMinutes: Int = 5): Long {
+        dedupMutex.withLock {
+            val merchant = event.merchant
+            val amount = event.amount
+            if (merchant != null && amount != null) {
+                val cutoffTime = Date(System.currentTimeMillis() - lookbackMinutes * 60 * 1000)
+                if (transactionDao.countByDedupKey(merchant, amount, cutoffTime) > 0) {
+                    return -1L
+                }
+            }
+            val transaction = Transaction(
+                source = event.source,
+                sourceApp = event.sourceApp,
+                rawText = event.rawText,
+                merchant = event.merchant ?: "Unknown",
+                amount = event.amount ?: 0.0,
+                currency = event.currency ?: "USD",
+                timestamp = event.date ?: Date(),
+                capturedAt = event.capturedAt,
+                confidenceScore = event.confidenceScore,
+                isParsed = event.isParsed,
+                transactionType = if (event.merchant?.contains("refund", ignoreCase = true) == true)
+                    TransactionType.REFUND else TransactionType.PURCHASE
+            )
+            return transactionDao.insert(transaction)
         }
     }
 

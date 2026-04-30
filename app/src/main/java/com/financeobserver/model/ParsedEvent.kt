@@ -9,7 +9,7 @@ import java.util.Date
 data class ParsedEvent(
     val source: SourceType,
     val sourceApp: String?,
-    val senderNumber: String?,       // For SMS only
+    val senderNumber: String? = null,       // For SMS only
     val rawText: String,
     val capturedAt: Date = Date(),
 

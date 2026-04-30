@@ -78,7 +78,9 @@ class SmsReceiver : BroadcastReceiver() {
             return
         }
 
-        Log.d(TAG, "Payment SMS from $sender: ${fullMessage.take(100)}")
+        val messageDigest = java.security.MessageDigest.getInstance("SHA-256")
+        val smsHash = messageDigest.digest(fullMessage.toByteArray()).take(4).joinToString("") { "%02x".format(it) }
+        Log.d(TAG, "Payment SMS from $sender (hash=$smsHash)")
 
         // Process in background
         receiverScope.launch {
@@ -86,11 +88,10 @@ class SmsReceiver : BroadcastReceiver() {
                 val app = context.applicationContext as FinanceObserverApp
                 val parsedEvent = app.parserRegistry.parseSms(sender, fullMessage)
 
-                // Check for duplicates
-                val isDuplicate = app.transactionRepository.isDuplicate(parsedEvent.merchant, parsedEvent.amount, lookbackMinutes = 5)
+                // Atomic check-and-insert to prevent race conditions
+                val transactionId = app.transactionRepository.tryInsert(parsedEvent)
 
-                if (!isDuplicate) {
-                    val transactionId = app.transactionRepository.insertParsedEvent(parsedEvent)
+                if (transactionId >= 0) {
                     Log.d(TAG, "Stored SMS transaction: id=$transactionId, merchant=${parsedEvent.merchant}, amount=${parsedEvent.amount}")
 
                     // Run detection engines

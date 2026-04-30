@@ -153,7 +153,7 @@ class GenericParser : PaymentParser {
         // Remove common words and try to find a proper noun
         val words = text.split(" ")
             .filter { it.length > 2 }
-            .filter { it[0].isUpperCase() }
+            .filter { it.firstOrNull()?.isUpperCase() == true }
             .filter { !it.matches(Regex("^(You|Your|The|And|For|On|At|In|With|This|That|Have|Has|Was|Were|Are|Is|Am|Not|But|Or|Nor)$")) }
 
         return if (words.isNotEmpty()) {

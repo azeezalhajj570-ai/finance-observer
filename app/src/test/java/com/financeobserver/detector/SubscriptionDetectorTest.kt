@@ -1,5 +1,6 @@
 package com.financeobserver.detector
 
+import com.financeobserver.model.BillingCycle
 import org.junit.Assert.*
 import org.junit.Test
 import java.util.Date
