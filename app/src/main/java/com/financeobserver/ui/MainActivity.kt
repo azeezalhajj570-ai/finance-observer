@@ -1,20 +1,13 @@
 package com.financeobserver.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.financeobserver.FinanceObserverApp
 import com.financeobserver.R
-import com.financeobserver.model.Transaction
-import com.financeobserver.util.CurrencyHelper
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,8 +19,11 @@ class MainActivity : AppCompatActivity() {
     private val subscriptionsFragment = SubscriptionsFragment()
     private val accountsFragment = AccountsFragment()
     private val settingsFragment = SettingsFragment()
+    private val signInFragment = SignInFragment()
+    private val signUpFragment = SignUpFragment()
 
     private var activeFragment: Fragment = homeFragment
+    private var isMainContentShown = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,19 +32,18 @@ class MainActivity : AppCompatActivity() {
         app = application as FinanceObserverApp
         bottomNav = findViewById(R.id.bottomNav)
 
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragmentContainer, settingsFragment, "settings").hide(settingsFragment)
-            .add(R.id.fragmentContainer, accountsFragment, "accounts").hide(accountsFragment)
-            .add(R.id.fragmentContainer, subscriptionsFragment, "subscriptions").hide(subscriptionsFragment)
-            .add(R.id.fragmentContainer, transactionsFragment, "transactions").hide(transactionsFragment)
-            .add(R.id.fragmentContainer, homeFragment, "home")
-            .commit()
+        if (app.authManager.isLoggedIn()) {
+            showMainContent()
+        } else {
+            showAuthScreen()
+        }
 
         setupBottomNav()
     }
 
     private fun setupBottomNav() {
         bottomNav.setOnItemSelectedListener { item ->
+            if (!isMainContentShown) return@setOnItemSelectedListener false
             when (item.itemId) {
                 R.id.nav_home -> switchFragment(homeFragment)
                 R.id.nav_transactions -> switchFragment(transactionsFragment)
@@ -70,9 +65,61 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    private fun showAuthScreen() {
+        bottomNav.visibility = View.GONE
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragmentContainer, signInFragment, "signIn")
+            .commit()
+        activeFragment = signInFragment
+    }
+
+    fun showSignIn() {
+        supportFragmentManager.beginTransaction()
+            .hide(signUpFragment)
+            .show(signInFragment)
+            .commit()
+        activeFragment = signInFragment
+    }
+
+    fun showSignUp() {
+        val ft = supportFragmentManager.beginTransaction().hide(signInFragment)
+        if (signUpFragment.isAdded) {
+            ft.show(signUpFragment)
+        } else {
+            ft.add(R.id.fragmentContainer, signUpFragment, "signUp")
+        }
+        ft.commit()
+        activeFragment = signUpFragment
+    }
+
+    fun onAuthSuccess() {
+        supportFragmentManager.beginTransaction()
+            .remove(signInFragment)
+            .remove(signUpFragment)
+            .commitAllowingStateLoss()
+        showMainContent()
+    }
+
+    private fun showMainContent() {
+        isMainContentShown = true
+        bottomNav.visibility = View.VISIBLE
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragmentContainer, settingsFragment, "settings").hide(settingsFragment)
+            .add(R.id.fragmentContainer, accountsFragment, "accounts").hide(accountsFragment)
+            .add(R.id.fragmentContainer, subscriptionsFragment, "subscriptions").hide(subscriptionsFragment)
+            .add(R.id.fragmentContainer, transactionsFragment, "transactions").hide(transactionsFragment)
+            .add(R.id.fragmentContainer, homeFragment, "home")
+            .commitAllowingStateLoss()
+        activeFragment = homeFragment
+        supportFragmentManager.executePendingTransactions()
+        checkPermissionsAndLoad()
+    }
+
     override fun onResume() {
         super.onResume()
-        checkPermissionsAndLoad()
+        if (isMainContentShown) {
+            checkPermissionsAndLoad()
+        }
     }
 
     private fun checkNotificationAccess(): Boolean {

@@ -32,4 +32,26 @@
     <string name="change_language_msg">The app will restart to apply the %s language. Continue?</string>
     <string name="restart">Restart</string>
     <string name="cancel">Cancel</string>
+
+    <!-- Auth -->
+    <string name="auth_welcome">Track your spending automatically</string>
+    <string name="auth_create_account">Create your account</string>
+    <string name="auth_phone_hint">Phone number</string>
+    <string name="auth_password_hint">Password</string>
+    <string name="auth_confirm_password_hint">Confirm password</string>
+    <string name="auth_sign_in">Sign In</string>
+    <string name="auth_sign_up">Sign Up</string>
+    <string name="auth_no_account">Don\'t have an account?</string>
+    <string name="auth_has_account">Already have an account?</string>
+    <string name="auth_use_fingerprint">Use Fingerprint</string>
+    <string name="auth_required">Required</string>
+    <string name="auth_password_short">Password must be at least 4 characters</string>
+    <string name="auth_passwords_mismatch">Passwords do not match</string>
+    <string name="auth_sign_up_success">Account created!</string>
+    <string name="auth_biometric_title">Fingerprint Authentication</string>
+    <string name="auth_biometric_subtitle">Sign in to Finance Observer</string>
+    <string name="auth_biometric_success">Fingerprint verified</string>
+    <string name="auth_biometric_failed">Fingerprint not recognized</string>
+    <string name="auth_biometric_desc">Sign in with your fingerprint</string>
+    <string name="auth_sign_out">Sign Out</string>
 </resources>

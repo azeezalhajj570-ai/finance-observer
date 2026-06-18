@@ -2,6 +2,7 @@ package com.financeobserver.database
 
 import androidx.room.TypeConverter
 import com.financeobserver.model.BillingCycle
+import com.financeobserver.model.NotificationStatus
 import com.financeobserver.model.SourceType
 import com.financeobserver.model.TransactionType
 import java.util.Date
@@ -30,4 +31,10 @@ class Converters {
 
     @TypeConverter
     fun toBillingCycle(name: String?): BillingCycle? = name?.let { BillingCycle.valueOf(it) }
+
+    @TypeConverter
+    fun fromNotificationStatus(status: NotificationStatus?): String? = status?.name
+
+    @TypeConverter
+    fun toNotificationStatus(name: String?): NotificationStatus? = name?.let { NotificationStatus.valueOf(it) }
 }

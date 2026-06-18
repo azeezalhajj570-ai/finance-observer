@@ -8,6 +8,12 @@
     
     <!-- Notification access is granted via Settings, not manifest permission -->
     
+    <!-- For posting transaction notifications to the user -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    
+    <!-- For biometric (fingerprint) authentication -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    
     <!-- For cash flow forecast (optional internet for exchange rates) -->
     <uses-permission android:name="android.permission.INTERNET" />
     

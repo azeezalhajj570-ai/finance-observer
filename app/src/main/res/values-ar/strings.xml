@@ -32,4 +32,26 @@
     <string name="change_language_msg">سيتم إعادة تشغيل التطبيق لتطبيق لغة %s. هل تريد المتابعة؟</string>
     <string name="restart">إعادة تشغيل</string>
     <string name="cancel">إلغاء</string>
+
+    <!-- Auth -->
+    <string name="auth_welcome">تتبع إنفاقك تلقائياً</string>
+    <string name="auth_create_account">إنشاء حساب جديد</string>
+    <string name="auth_phone_hint">رقم الهاتف</string>
+    <string name="auth_password_hint">كلمة المرور</string>
+    <string name="auth_confirm_password_hint">تأكيد كلمة المرور</string>
+    <string name="auth_sign_in">تسجيل الدخول</string>
+    <string name="auth_sign_up">إنشاء حساب</string>
+    <string name="auth_no_account">ليس لديك حساب؟</string>
+    <string name="auth_has_account">لديك حساب بالفعل؟</string>
+    <string name="auth_use_fingerprint">استخدام البصمة</string>
+    <string name="auth_required">مطلوب</string>
+    <string name="auth_password_short">يجب أن تكون كلمة المرور 4 أحرف على الأقل</string>
+    <string name="auth_passwords_mismatch">كلمتا المرور غير متطابقتين</string>
+    <string name="auth_sign_up_success">تم إنشاء الحساب!</string>
+    <string name="auth_biometric_title">التحقق بالبصمة</string>
+    <string name="auth_biometric_subtitle">تسجيل الدخول إلى مراقب المالية</string>
+    <string name="auth_biometric_success">تم التحقق من البصمة</string>
+    <string name="auth_biometric_failed">البصمة غير معروفة</string>
+    <string name="auth_biometric_desc">تسجيل الدخول باستخدام بصمتك</string>
+    <string name="auth_sign_out">تسجيل الخروج</string>
 </resources>

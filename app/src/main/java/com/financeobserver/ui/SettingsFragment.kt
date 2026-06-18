@@ -12,10 +12,16 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.financeobserver.FinanceObserverApp
 import com.financeobserver.R
 import com.financeobserver.util.CurrencyHelper
 import com.financeobserver.util.LocaleHelper
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.switchmaterial.SwitchMaterial
+import kotlinx.coroutines.launch
+import android.widget.Toast
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
@@ -26,9 +32,11 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private lateinit var permStatusText: TextView
     private lateinit var permDot: View
     private lateinit var currencyContainer: LinearLayout
+    private lateinit var app: FinanceObserverApp
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        app = requireActivity().application as FinanceObserverApp
 
         grantNotificationBtn = view.findViewById(R.id.grantNotificationBtn)
         grantSmsBtn = view.findViewById(R.id.grantSmsBtn)
@@ -41,6 +49,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         setupPermissionButtons()
         setupLanguageButtons()
         setupCurrencySpinner()
+        setupBiometric()
+        setupSignOut()
     }
 
     override fun onResume() {
@@ -137,6 +147,37 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         if (requestCode == SMS_PERMISSION_REQUEST_CODE) {
             updatePermissionStatus()
             (activity as? MainActivity)?.checkPermissionsAndLoad()
+        }
+    }
+
+    private fun setupBiometric() {
+        val biometricCard = view?.findViewById<MaterialCardView>(R.id.biometricCard) ?: return
+        val biometricSwitch = view?.findViewById<SwitchMaterial>(R.id.biometricSwitch) ?: return
+
+        if (!app.authManager.isBiometricAvailable()) {
+            biometricCard.visibility = View.GONE
+            return
+        }
+
+        biometricCard.visibility = View.VISIBLE
+
+        lifecycleScope.launch {
+            biometricSwitch.isChecked = app.authManager.isBiometricEnabled()
+        }
+
+        biometricSwitch.setOnCheckedChangeListener { _, isChecked ->
+            lifecycleScope.launch {
+                app.authManager.setBiometricEnabled(isChecked)
+            }
+        }
+    }
+
+    private fun setupSignOut() {
+        val signOutBtn = view?.findViewById<MaterialButton>(R.id.signOutBtn) ?: return
+        signOutBtn.setOnClickListener {
+            app.authManager.logout()
+            Toast.makeText(requireContext(), R.string.auth_sign_out, Toast.LENGTH_SHORT).show()
+            requireActivity().recreate()
         }
     }
 

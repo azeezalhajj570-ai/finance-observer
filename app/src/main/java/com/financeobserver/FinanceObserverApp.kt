@@ -5,6 +5,8 @@ import com.financeobserver.database.AppDatabase
 import com.financeobserver.detector.AnomalyDetector
 import com.financeobserver.detector.SubscriptionDetector
 import com.financeobserver.parser.ParserRegistry
+import com.financeobserver.service.AuthManager
+import com.financeobserver.service.TransactionNotifier
 import com.financeobserver.service.TransactionRepository
 
 /**
@@ -29,6 +31,12 @@ class FinanceObserverApp : Application() {
     lateinit var anomalyDetector: AnomalyDetector
         private set
 
+    lateinit var transactionNotifier: TransactionNotifier
+        private set
+
+    lateinit var authManager: AuthManager
+        private set
+
     override fun onCreate() {
         super.onCreate()
 
@@ -49,6 +57,16 @@ class FinanceObserverApp : Application() {
 
         anomalyDetector = AnomalyDetector(
             transactionDao = database.transactionDao()
+        )
+
+        transactionNotifier = TransactionNotifier(
+            context = this,
+            notificationDao = database.notificationDao()
+        )
+
+        authManager = AuthManager(
+            context = this,
+            userDao = database.userDao()
         )
     }
 }

@@ -99,6 +99,9 @@ class SmsReceiver : BroadcastReceiver() {
                         app.subscriptionDetector.analyzeNewTransaction(parsedEvent)
                         app.anomalyDetector.analyzeNewTransaction(parsedEvent)
                     }
+
+                    // Notify group members about the new transaction
+                    app.transactionNotifier.notifyTransactionCreated(transactionId, parsedEvent)
                 } else {
                     Log.d(TAG, "Duplicate SMS transaction, skipping: ${parsedEvent.merchant} ${parsedEvent.amount}")
                 }

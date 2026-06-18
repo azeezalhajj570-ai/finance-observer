@@ -175,6 +175,9 @@ class PaymentNotificationListener : NotificationListenerService() {
             app.subscriptionDetector.analyzeNewTransaction(parsedEvent)
             app.anomalyDetector.analyzeNewTransaction(parsedEvent)
         }
+
+        // Notify group members about the new transaction
+        app.transactionNotifier.notifyTransactionCreated(transactionId, parsedEvent)
     }
 
     /**
