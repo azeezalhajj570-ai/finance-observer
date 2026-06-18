@@ -9,172 +9,252 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/spacing_md">
+        android:orientation="vertical">
 
-        <!-- Permissions Section -->
-        <com.google.android.material.card.MaterialCardView
+        <!-- Header -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_sm"
-            app:cardCornerRadius="@dimen/corner_md"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardBackgroundColor="@color/surface">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@color/primary"
+            android:paddingStart="@dimen/spacing_lg"
+            android:paddingEnd="@dimen/spacing_lg"
+            android:paddingTop="48dp"
+            android:paddingBottom="@dimen/spacing_lg">
 
-            <LinearLayout
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Settings"
+                android:textSize="@dimen/text_title_2"
+                android:textColor="@color/white"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_lg">
+
+            <!-- Permissions Section -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_md">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_permissions"
-                    android:textSize="@dimen/text_title"
-                    android:textColor="@color/text_primary"
-                    android:fontFamily="sans-serif-medium" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/permissions_desc_short"
-                    android:textSize="@dimen/text_caption"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginTop="@dimen/spacing_xxs"
-                    android:layout_marginBottom="@dimen/spacing_sm" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/grantNotificationBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/grant_notification_access"
-                    app:backgroundTint="@color/accent_signature"
-                    android:textColor="@color/button_text"
-                    android:layout_marginBottom="@dimen/spacing_xs" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/grantSmsBtn"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/grant_sms_access"
-                    app:strokeColor="@color/accent_signature"
-                    android:textColor="@color/accent_signature" />
+                android:layout_marginBottom="@dimen/spacing_md"
+                app:cardCornerRadius="@dimen/corner_md"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/surface"
+                app:strokeColor="@color/border"
+                app:strokeWidth="1dp">
 
                 <LinearLayout
-                    android:id="@+id/permStatusLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="@dimen/spacing_sm">
-
-                    <View
-                        android:id="@+id/permDot"
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:background="@drawable/perm_dot"
-                        android:layout_marginEnd="@dimen/spacing_xs" />
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_lg">
 
                     <TextView
-                        android:id="@+id/permStatusText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="⊙ Setup needed"
+                        android:text="Permissions"
+                        android:textSize="@dimen/text_title_3"
+                        android:textColor="@color/text_primary"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Grant notification and SMS access to track your spending."
                         android:textSize="@dimen/text_caption"
-                        android:textColor="@color/accent_critical" />
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="@dimen/spacing_xxs"
+                        android:layout_marginBottom="@dimen/spacing_md" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/grantNotificationBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:text="Grant Notification Access"
+                        app:cornerRadius="@dimen/corner_sm"
+                        app:backgroundTint="@color/primary"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_body_3"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginBottom="@dimen/spacing_sm" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/grantSmsBtn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:text="Grant SMS Access"
+                        app:cornerRadius="@dimen/corner_sm"
+                        app:strokeColor="@color/primary"
+                        android:textColor="@color/primary"
+                        android:textSize="@dimen/text_body_3"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <LinearLayout
+                        android:id="@+id/permStatusLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="@dimen/spacing_md">
+
+                        <View
+                            android:id="@+id/permDot"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:background="@drawable/perm_dot"
+                            android:layout_marginEnd="@dimen/spacing_xs" />
+
+                        <TextView
+                            android:id="@+id/permStatusText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Setup needed"
+                            android:textSize="@dimen/text_caption"
+                            android:textColor="@color/semantic_red" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+            </com.google.android.material.card.MaterialCardView>
 
-        <!-- Language Section -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_sm"
-            app:cardCornerRadius="@dimen/corner_md"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardBackgroundColor="@color/surface">
-
-            <LinearLayout
+            <!-- Language Section -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_md">
+                android:layout_marginBottom="@dimen/spacing_md"
+                app:cardCornerRadius="@dimen/corner_md"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/surface"
+                app:strokeColor="@color/border"
+                app:strokeWidth="1dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/language"
-                    android:textSize="@dimen/text_title"
-                    android:textColor="@color/text_primary"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_marginBottom="@dimen/spacing_sm" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/englishBtn"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="English"
-                    app:strokeColor="@color/accent_signature"
-                    android:textColor="@color/accent_signature"
-                    android:layout_marginBottom="@dimen/spacing_xs" />
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_lg">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/arabicBtn"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="العربية"
-                    app:strokeColor="@color/accent_signature"
-                    android:textColor="@color/accent_signature" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Language"
+                        android:textSize="@dimen/text_title_3"
+                        android:textColor="@color/text_primary"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginBottom="@dimen/spacing_md" />
 
-        <!-- About Section -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="@dimen/corner_md"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardBackgroundColor="@color/surface">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/englishBtn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:text="English"
+                        app:cornerRadius="@dimen/corner_sm"
+                        app:strokeColor="@color/primary"
+                        android:textColor="@color/primary"
+                        android:textSize="@dimen/text_body_3"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginBottom="@dimen/spacing_sm" />
 
-            <LinearLayout
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/arabicBtn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:text="العربية"
+                        app:cornerRadius="@dimen/corner_sm"
+                        app:strokeColor="@color/primary"
+                        android:textColor="@color/primary"
+                        android:textSize="@dimen/text_body_3"
+                        android:fontFamily="sans-serif-medium" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Currency Section -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_md">
+                android:layout_marginBottom="@dimen/spacing_md"
+                app:cardCornerRadius="@dimen/corner_md"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/surface"
+                app:strokeColor="@color/border"
+                app:strokeWidth="1dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/about_title"
-                    android:textSize="@dimen/text_title"
-                    android:textColor="@color/text_primary"
-                    android:fontFamily="sans-serif-medium" />
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_lg">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Currency"
+                        android:textSize="@dimen/text_title_3"
+                        android:textColor="@color/text_primary"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginBottom="@dimen/spacing_md" />
+
+                    <LinearLayout
+                        android:id="@+id/currencyContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- About Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/corner_md"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/surface"
+                app:strokeColor="@color/border"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Finance Observer v1.0"
-                    android:textSize="@dimen/text_body"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginTop="@dimen/spacing_xs" />
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_lg">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/about_desc"
-                    android:textSize="@dimen/text_caption"
-                    android:textColor="@color/text_tertiary"
-                    android:layout_marginTop="@dimen/spacing_xxs" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="About"
+                        android:textSize="@dimen/text_title_3"
+                        android:textColor="@color/text_primary"
+                        android:fontFamily="sans-serif-medium" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/spacing_md" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Finance Observer v1.0"
+                        android:textSize="@dimen/text_body_3"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="@dimen/spacing_xs" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Finance Observer tracks your spending by analyzing SMS and notifications. All data stays on your device."
+                        android:textSize="@dimen/text_caption"
+                        android:textColor="@color/text_tertiary"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_md" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

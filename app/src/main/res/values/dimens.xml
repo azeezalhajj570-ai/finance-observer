@@ -10,34 +10,47 @@
     <dimen name="spacing_xxl">32dp</dimen>
     <dimen name="spacing_xxxl">48dp</dimen>
 
-    <!-- Corner Radius -->
+    <!-- Corner Radius (iBank uses more rounded shapes) -->
     <dimen name="corner_xs">4dp</dimen>
     <dimen name="corner_sm">8dp</dimen>
-    <dimen name="corner_md">12dp</dimen>
-    <dimen name="corner_lg">16dp</dimen>
+    <dimen name="corner_md">16dp</dimen>
+    <dimen name="corner_lg">20dp</dimen>
+    <dimen name="corner_xl">24dp</dimen>
     <dimen name="corner_full">999dp</dimen>
 
-    <!-- Typography -->
-    <dimen name="text_display_large">32sp</dimen>
-    <dimen name="text_display_medium">24sp</dimen>
+    <!-- Typography (iBank / Poppins scale) -->
+    <dimen name="text_title_1">24sp</dimen>
+    <dimen name="text_title_2">20sp</dimen>
+    <dimen name="text_title_3">16sp</dimen>
+    <dimen name="text_body_1">16sp</dimen>
+    <dimen name="text_body_3">14sp</dimen>
+    <dimen name="text_caption">12sp</dimen>
+    <dimen name="text_amount_large">20sp</dimen>
+
+    <!-- Legacy typography dimension aliases -->
+    <dimen name="text_display_large">24sp</dimen>
+    <dimen name="text_display_medium">20sp</dimen>
     <dimen name="text_headline">20sp</dimen>
     <dimen name="text_title">16sp</dimen>
     <dimen name="text_body">14sp</dimen>
     <dimen name="text_body_ar">15sp</dimen>
-    <dimen name="text_caption">12sp</dimen>
     <dimen name="text_caption_ar">13sp</dimen>
-    <dimen name="text_amount">18sp</dimen>
-    <dimen name="text_amount_large">30sp</dimen>
+    <dimen name="text_amount">16sp</dimen>
 
     <!-- Components -->
     <dimen name="bottom_nav_height">64dp</dimen>
-    <dimen name="transaction_item_height">68dp</dimen>
+    <dimen name="transaction_item_height">72dp</dimen>
     <dimen name="touch_target_min">48dp</dimen>
     <dimen name="fab_size">56dp</dimen>
-    <dimen name="category_icon_size">40dp</dimen>
+    <dimen name="category_icon_size">48dp</dimen>
     <dimen name="card_elevation">0dp</dimen>
     <dimen name="divider_thickness">1dp</dimen>
     <dimen name="progress_bar_height">4dp</dimen>
     <dimen name="nav_indicator_width">16dp</dimen>
     <dimen name="nav_indicator_height">3dp</dimen>
+
+    <!-- Card bank dimensions -->
+    <dimen name="card_bank_height">220dp</dimen>
+    <dimen name="category_grid_spacing">12dp</dimen>
+    <dimen name="category_item_size">72dp</dimen>
 </resources>

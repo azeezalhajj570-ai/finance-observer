@@ -1,49 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Core Background Colors -->
-    <color name="background">#0D0F13</color>
-    <color name="surface">#161921</color>
-    <color name="surface_elevated">#1E2230</color>
-    <color name="status_bar">#0A0C10</color>
-    <color name="navigation_bar">#0A0C10</color>
+    <!-- Primary Brand Colors (iBank / FinPay) -->
+    <color name="primary">#3629B6</color>
+    <color name="primary_dark">#281C9D</color>
+    <color name="primary_light">#5655B9</color>
+    <color name="primary_pale">#A8A3D7</color>
+    <color name="primary_bg">#F1F1F8</color>
 
-    <!-- Text Colors -->
-    <color name="text_primary">#E9ECF2</color>
-    <color name="text_secondary">#838A9E</color>
-    <color name="text_tertiary">#545B6E</color>
+    <!-- Neutral Colors -->
+    <color name="text_primary">#333333</color>
+    <color name="text_secondary">#898989</color>
+    <color name="text_tertiary">#C4C4C4</color>
+    <color name="text_placeholder">#CACACA</color>
 
-    <!-- Accent Colors -->
-    <color name="accent_signature">#C4A56E</color>
-    <color name="accent_critical">#E05561</color>
-    <color name="accent_positive">#5BA37A</color>
-    <color name="accent_info">#5B8CC7</color>
+    <!-- Surface Colors -->
+    <color name="background">#FFFFFF</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_elevated">#F8F9FC</color>
+    <color name="cardBackground">#FFFFFF</color>
+    <color name="header_bg">#3629B6</color>
+
+    <!-- Semantic Colors -->
+    <color name="semantic_red">#FF4267</color>
+    <color name="semantic_yellow">#FFAF2A</color>
+    <color name="semantic_green">#52D5BA</color>
+    <color name="semantic_blue">#0890FE</color>
+    <color name="semantic_orange">#FB6B18</color>
+
+    <!-- Accent / Legacy mapping -->
+    <color name="accent_signature">#3629B6</color>
+    <color name="accent_critical">#FF4267</color>
+    <color name="accent_positive">#52D5BA</color>
+    <color name="accent_info">#0890FE</color>
+    <color name="accent">#3629B6</color>
 
     <!-- Border & Ripple -->
-    <color name="border">#252936</color>
-    <color name="ripple">#33C4A56E</color>
-    <color name="elevation_overlay">#08FFFFFF</color>
+    <color name="border">#E0E0E0</color>
+    <color name="ripple">#333626B6</color>
+    <color name="divider">#F0F0F0</color>
 
     <!-- Button Text -->
-    <color name="button_text">#0D0F13</color>
+    <color name="button_text">#FFFFFF</color>
+
+    <!-- Status Bar & Navigation -->
+    <color name="status_bar">#3629B6</color>
+    <color name="navigation_bar">#FFFFFF</color>
 
     <!-- Legacy aliases for backward compatibility -->
-    <color name="primary">#C4A56E</color>
-    <color name="primaryDark">#0A0C10</color>
-    <color name="accent">#C4A56E</color>
-    <color name="primaryText">#E9ECF2</color>
-    <color name="secondaryText">#838A9E</color>
-    <color name="cardBackground">#161921</color>
+    <color name="primaryDark">#281C9D</color>
+    <color name="primaryText">#333333</color>
+    <color name="secondaryText">#898989</color>
     <color name="white">#FFFFFF</color>
-    <color name="error">#E05561</color>
-    <color name="warning">#FF9800</color>
-    <color name="success">#5BA37A</color>
-    <color name="ic_launcher_background">#0D0F13</color>
+    <color name="error">#FF4267</color>
+    <color name="warning">#FFAF2A</color>
+    <color name="success">#52D5BA</color>
+    <color name="ic_launcher_background">#3629B6</color>
+    <color name="elevation_overlay">#00000000</color>
 
-    <!-- Category Badge Colors (muted, 20% opacity bases) -->
-    <color name="cat_food">#33C4A56E</color>
-    <color name="cat_transport">#335B8CC7</color>
-    <color name="cat_shopping">#335BA37A</color>
-    <color name="cat_subscription">#338B6D3A</color>
-    <color name="cat_streaming">#33E05561</color>
-    <color name="cat_default">#33545B6E</color>
+    <!-- Tab bar colors -->
+    <color name="tab_active">#3629B6</color>
+    <color name="tab_inactive">#898989</color>
+
+    <!-- Category Badge Colors (muted tones for light theme) -->
+    <color name="cat_food">#FFF0F0</color>
+    <color name="cat_transport">#F0F4FF</color>
+    <color name="cat_shopping">#F0FFF8</color>
+    <color name="cat_subscription">#F4F0FF</color>
+    <color name="cat_streaming">#FFF5F0</color>
+    <color name="cat_default">#F5F5F5</color>
+
+    <!-- Category text colors -->
+    <color name="cat_food_text">#FF4267</color>
+    <color name="cat_transport_text">#0890FE</color>
+    <color name="cat_shopping_text">#52D5BA</color>
+    <color name="cat_subscription_text">#3629B6</color>
+    <color name="cat_streaming_text">#FB6B18</color>
+    <color name="cat_default_text">#898989</color>
 </resources>

@@ -6,32 +6,38 @@
     android:orientation="vertical"
     android:background="@color/background">
 
+    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="@dimen/spacing_md">
+        android:background="@color/primary"
+        android:paddingStart="@dimen/spacing_lg"
+        android:paddingEnd="@dimen/spacing_lg"
+        android:paddingTop="48dp"
+        android:paddingBottom="@dimen/spacing_lg">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/subscriptions_title"
-            android:textSize="@dimen/text_title"
-            android:textColor="@color/text_primary"
+            android:text="Subscriptions"
+            android:textSize="@dimen/text_title_2"
+            android:textColor="@color/white"
             android:fontFamily="sans-serif-medium" />
 
         <TextView
             android:id="@+id/subscriptionTotalText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0/mo"
-            android:textSize="@dimen/text_caption"
-            android:textColor="@color/text_secondary"
-            android:fontFamily="@font/jetbrains_mono_regular" />
+            android:text="$0.00/mo"
+            android:textSize="@dimen/text_body_3"
+            android:textColor="#A8A3D7"
+            android:fontFamily="sans-serif-medium" />
     </LinearLayout>
 
+    <!-- Empty State -->
     <LinearLayout
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
@@ -42,31 +48,35 @@
         android:visibility="visible">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="⊙"
-            android:textSize="48sp"
-            android:textColor="@color/text_tertiary" />
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:text="⊘"
+            android:textSize="32sp"
+            android:textColor="@color/text_tertiary"
+            android:background="@drawable/empty_circle"
+            android:layout_marginBottom="@dimen/spacing_md" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/no_subscriptions_yet"
-            android:textSize="@dimen/text_body"
+            android:text="No subscriptions detected"
+            android:textSize="@dimen/text_body_3"
             android:textColor="@color/text_secondary"
-            android:layout_marginTop="@dimen/spacing_md"
+            android:fontFamily="sans-serif-medium"
             android:gravity="center" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/subscriptions_discovery"
+            android:text="Recurring payments will appear here\nafter we detect 2 or more similar transactions."
             android:textSize="@dimen/text_caption"
             android:textColor="@color/text_tertiary"
             android:layout_marginTop="@dimen/spacing_sm"
             android:gravity="center" />
     </LinearLayout>
 
+    <!-- Subscription List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/subscriptionRecyclerView"
         android:layout_width="match_parent"
@@ -74,7 +84,8 @@
         android:layout_weight="1"
         android:visibility="gone"
         android:clipToPadding="false"
-        android:paddingStart="@dimen/spacing_md"
-        android:paddingEnd="@dimen/spacing_md"
+        android:paddingStart="@dimen/spacing_lg"
+        android:paddingEnd="@dimen/spacing_lg"
+        android:paddingTop="@dimen/spacing_md"
         android:paddingBottom="@dimen/spacing_md" />
 </LinearLayout>

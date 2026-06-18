@@ -1,45 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base text appearance -->
+    <!-- Base text appearance (iBank / FinPay) -->
     <style name="TextAppearance.FinanceObserver" parent="TextAppearance.Material3.BodyMedium">
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
-    <!-- Display/Headline font stack (Cairo preferred, fallback to system sans-serif-medium) -->
+    <!-- Title 1: 24sp SemiBold -->
+    <style name="TextAppearance.FinanceObserver.Title1">
+        <item name="android:textSize">@dimen/text_title_1</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Title 2: 20sp SemiBold -->
+    <style name="TextAppearance.FinanceObserver.Title2">
+        <item name="android:textSize">@dimen/text_title_2</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Title 3: 16sp SemiBold -->
+    <style name="TextAppearance.FinanceObserver.Title3">
+        <item name="android:textSize">@dimen/text_title_3</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Body 1: 16sp Medium -->
+    <style name="TextAppearance.FinanceObserver.Body1">
+        <item name="android:textSize">@dimen/text_body_1</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Body 2: 16sp Regular -->
+    <style name="TextAppearance.FinanceObserver.Body2">
+        <item name="android:textSize">@dimen/text_body_1</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Body 3: 14sp Medium -->
+    <style name="TextAppearance.FinanceObserver.Body3">
+        <item name="android:textSize">@dimen/text_body_3</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Caption 1: 12sp SemiBold -->
+    <style name="TextAppearance.FinanceObserver.Caption1">
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Caption 2: 12sp Medium -->
+    <style name="TextAppearance.FinanceObserver.Caption2">
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Legacy style aliases for backward compatibility -->
     <style name="TextAppearance.FinanceObserver.DisplayLarge">
-        <item name="android:textSize">@dimen/text_display_large</item>
+        <item name="android:textSize">@dimen/text_title_1</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
     <style name="TextAppearance.FinanceObserver.Headline">
-        <item name="android:textSize">@dimen/text_headline</item>
+        <item name="android:textSize">@dimen/text_title_2</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <!-- Title (Inter/Tajawal preferred, sans-serif-medium fallback) -->
     <style name="TextAppearance.FinanceObserver.Title">
-        <item name="android:textSize">@dimen/text_title</item>
+        <item name="android:textSize">@dimen/text_title_3</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <!-- Body (Inter/Tajawal preferred, sans-serif fallback) -->
     <style name="TextAppearance.FinanceObserver.Body">
-        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:textSize">@dimen/text_body_3</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="TextAppearance.FinanceObserver.BodyMedium">
-        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:textSize">@dimen/text_body_3</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <!-- Caption -->
     <style name="TextAppearance.FinanceObserver.Caption">
         <item name="android:textSize">@dimen/text_caption</item>
         <item name="android:textColor">@color/text_secondary</item>
@@ -48,7 +101,7 @@
 
     <!-- Amount (monospace) -->
     <style name="TextAppearance.FinanceObserver.Amount">
-        <item name="android:textSize">@dimen/text_amount</item>
+        <item name="android:textSize">@dimen/text_body_1</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:fontFamily">monospace</item>
     </style>

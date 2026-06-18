@@ -5,10 +5,15 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.financeobserver.R
+import com.financeobserver.util.CurrencyHelper
 import com.financeobserver.util.LocaleHelper
 import com.google.android.material.button.MaterialButton
 
@@ -20,6 +25,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private lateinit var arabicBtn: MaterialButton
     private lateinit var permStatusText: TextView
     private lateinit var permDot: View
+    private lateinit var currencyContainer: LinearLayout
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,9 +36,11 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         arabicBtn = view.findViewById(R.id.arabicBtn)
         permStatusText = view.findViewById(R.id.permStatusText)
         permDot = view.findViewById(R.id.permDot)
+        currencyContainer = view.findViewById(R.id.currencyContainer)
 
         setupPermissionButtons()
         setupLanguageButtons()
+        setupCurrencySpinner()
     }
 
     override fun onResume() {
@@ -42,10 +50,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private fun setupPermissionButtons() {
         grantNotificationBtn.setOnClickListener {
-            val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-            startActivity(intent)
+            startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
         }
-
         grantSmsBtn.setOnClickListener {
             requestPermissions(
                 arrayOf(android.Manifest.permission.READ_SMS, android.Manifest.permission.RECEIVE_SMS),
@@ -56,20 +62,31 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private fun setupLanguageButtons() {
         val currentLocale = LocaleHelper.getCurrentLocale(requireContext())
-
         englishBtn.setOnClickListener {
-            if (currentLocale != LocaleHelper.LOCALE_EN) {
-                showLanguageChangeDialog(LocaleHelper.LOCALE_EN)
-            }
+            if (currentLocale != LocaleHelper.LOCALE_EN) showLanguageChangeDialog(LocaleHelper.LOCALE_EN)
         }
-
         arabicBtn.setOnClickListener {
-            if (currentLocale != LocaleHelper.LOCALE_AR) {
-                showLanguageChangeDialog(LocaleHelper.LOCALE_AR)
-            }
+            if (currentLocale != LocaleHelper.LOCALE_AR) showLanguageChangeDialog(LocaleHelper.LOCALE_AR)
         }
-
         updateLanguageButtonStates(currentLocale)
+    }
+
+    private fun setupCurrencySpinner() {
+        currencyContainer.removeAllViews()
+        val spinner = Spinner(requireContext())
+        val currencies = CurrencyHelper.supportedCurrencies
+        val selected = CurrencyHelper.getSelectedCurrency(requireContext())
+        val labels = currencies.map { "${it.symbol} ${it.code} - ${it.name}" }
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, labels)
+        spinner.adapter = adapter
+        spinner.setSelection(currencies.indexOfFirst { it.code == selected.code }.coerceAtLeast(0))
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                CurrencyHelper.setSelectedCurrency(requireContext(), currencies[pos].code)
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+        currencyContainer.addView(spinner)
     }
 
     private fun updateLanguageButtonStates(locale: String) {
@@ -98,7 +115,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         val hasSmsPermission = requireContext().checkSelfPermission(
             android.Manifest.permission.READ_SMS
         ) == PackageManager.PERMISSION_GRANTED
-
         if (hasNotificationAccess && hasSmsPermission) {
             permStatusText.text = getString(R.string.active_status)
             permStatusText.setTextColor(requireContext().getColor(R.color.accent_positive))
@@ -112,17 +128,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private fun checkNotificationAccess(): Boolean {
         val enabledPackages = Settings.Secure.getString(
-            requireContext().contentResolver,
-            "enabled_notification_listeners"
+            requireContext().contentResolver, "enabled_notification_listeners"
         ) ?: ""
         return enabledPackages.contains(requireContext().packageName)
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (requestCode == SMS_PERMISSION_REQUEST_CODE) {
             updatePermissionStatus()
             (activity as? MainActivity)?.checkPermissionsAndLoad()

@@ -12,7 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.financeobserver.FinanceObserverApp
 import com.financeobserver.R
+import com.financeobserver.model.Transaction
+import com.financeobserver.util.CurrencyHelper
 import com.financeobserver.util.LocaleHelper
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -25,7 +28,9 @@ class HomeFragment : Fragment() {
     private lateinit var app: FinanceObserverApp
     private lateinit var transactionAdapter: TransactionAdapter
 
+    private lateinit var headerGreeting: TextView
     private lateinit var totalSpendingText: TextView
+    private lateinit var thisMonthSpending: TextView
     private lateinit var spendingTrend: TextView
     private lateinit var subscriptionCountText: TextView
     private lateinit var subscriptionTotal: TextView
@@ -39,7 +44,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -47,7 +52,9 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         app = requireActivity().application as FinanceObserverApp
 
+        headerGreeting = view.findViewById(R.id.headerGreeting)
         totalSpendingText = view.findViewById(R.id.totalSpendingText)
+        thisMonthSpending = view.findViewById(R.id.thisMonthSpending)
         spendingTrend = view.findViewById(R.id.spendingTrend)
         subscriptionCountText = view.findViewById(R.id.subscriptionCountText)
         subscriptionTotal = view.findViewById(R.id.subscriptionTotal)
@@ -58,13 +65,15 @@ class HomeFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recentRecyclerView)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        transactionAdapter = TransactionAdapter(emptyList())
+        transactionAdapter = TransactionAdapter(emptyList()) { txn -> showTransactionDetail(txn) }
         recyclerView.adapter = transactionAdapter
 
+        headerGreeting.text = getGreeting()
         loadData()
     }
 
     fun refresh() {
+        headerGreeting.text = getGreeting()
         loadData()
     }
 
@@ -86,10 +95,11 @@ class HomeFragment : Fragment() {
             }
 
             totalSpendingText.text = formatAmount(totalSpending ?: 0.0)
-            subscriptionCountText.text = "${subscriptions.size} active"
+            thisMonthSpending.text = formatAmount(totalSpending ?: 0.0)
+            subscriptionCountText.text = "${subscriptions.size}"
             subscriptionTotal.text = "${formatAmount(subTotal)}/mo"
             anomalyCountText.text = "$flaggedCount"
-            transactionCountText.text = "${transactions.size} transactions"
+            transactionCountText.text = "${transactions.size}"
             spendingTrend.text = "vs last month"
 
             observationsContainer.removeAllViews()
@@ -101,7 +111,7 @@ class HomeFragment : Fragment() {
             } else {
                 emptyView.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
-                transactionAdapter = TransactionAdapter(transactions)
+                transactionAdapter = TransactionAdapter(transactions) { txn -> showTransactionDetail(txn) }
                 recyclerView.adapter = transactionAdapter
             }
         }
@@ -183,5 +193,46 @@ class HomeFragment : Fragment() {
             0.0 -> if (LocaleHelper.isArabic(requireContext())) "0" else "$0.00"
             else -> currency.format(amount)
         }
+    }
+
+    private fun getGreeting(): String {
+        val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
+        return when {
+            hour < 12 -> "Good morning"
+            hour < 17 -> "Good afternoon"
+            else -> "Good evening"
+        }
+    }
+
+    private fun showTransactionDetail(txn: Transaction) {
+        val dialog = BottomSheetDialog(requireContext())
+        dialog.setContentView(R.layout.bottom_sheet_transaction)
+
+        val currency = CurrencyHelper.getSelectedCurrency(requireContext())
+        val dateFormat = SimpleDateFormat("MMM dd, yyyy · h:mm a", Locale.getDefault())
+
+        dialog.findViewById<TextView>(R.id.detailMerchant)?.text = txn.merchant
+        dialog.findViewById<TextView>(R.id.detailAmount)?.text = CurrencyHelper.formatAmount(txn.amount, currency)
+        dialog.findViewById<TextView>(R.id.detailDate)?.text = dateFormat.format(txn.timestamp)
+        dialog.findViewById<TextView>(R.id.detailCategory)?.text = txn.category ?: "Uncategorized"
+        dialog.findViewById<TextView>(R.id.detailSource)?.text = when (txn.source) {
+            com.financeobserver.model.SourceType.NOTIFICATION -> "Notification · ${txn.sourceApp ?: "Unknown"}"
+            com.financeobserver.model.SourceType.SMS -> "SMS"
+            com.financeobserver.model.SourceType.MANUAL -> "Manual"
+        }
+        dialog.findViewById<TextView>(R.id.detailCurrency)?.text = txn.currency
+
+        if (txn.isFlagged) {
+            dialog.findViewById<View>(R.id.detailFlaggedLayout)?.visibility = View.VISIBLE
+            dialog.findViewById<View>(R.id.detailFlaggedDivider)?.visibility = View.VISIBLE
+            dialog.findViewById<TextView>(R.id.detailFlagged)?.text = txn.flagReason ?: "Flagged as anomaly"
+        }
+
+        if (!txn.notes.isNullOrEmpty()) {
+            dialog.findViewById<View>(R.id.detailNotesLayout)?.visibility = View.VISIBLE
+            dialog.findViewById<TextView>(R.id.detailNotes)?.text = txn.notes
+        }
+
+        dialog.show()
     }
 }

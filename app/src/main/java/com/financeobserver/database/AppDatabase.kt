@@ -7,12 +7,13 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.financeobserver.model.Account
 import com.financeobserver.model.Subscription
 import com.financeobserver.model.Transaction
 
 @Database(
-    entities = [Transaction::class, Subscription::class],
-    version = 1,
+    entities = [Transaction::class, Subscription::class, Account::class],
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -20,6 +21,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun transactionDao(): TransactionDao
     abstract fun subscriptionDao(): SubscriptionDao
+    abstract fun accountDao(): AccountDao
 
     companion object {
         private const val DATABASE_NAME = "finance_observer.db"
@@ -40,6 +42,7 @@ abstract class AppDatabase : RoomDatabase() {
                 DATABASE_NAME
             )
                 .addMigrations(MIGRATION_1_2)
+                .fallbackToDestructiveMigration()
                 .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
                 .addCallback(object : RoomDatabase.Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
@@ -56,7 +59,19 @@ abstract class AppDatabase : RoomDatabase() {
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                // Example: database.execSQL("ALTER TABLE transactions ADD COLUMN notes TEXT")
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS accounts (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        name TEXT NOT NULL,
+                        bankName TEXT NOT NULL,
+                        accountNumber TEXT,
+                        cardType TEXT,
+                        currency TEXT NOT NULL DEFAULT 'USD',
+                        balance REAL NOT NULL DEFAULT 0.0,
+                        isActive INTEGER NOT NULL DEFAULT 1,
+                        createdAt INTEGER NOT NULL
+                    )
+                """)
             }
         }
     }

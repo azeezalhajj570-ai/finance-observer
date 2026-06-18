@@ -1,53 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Dark Theme (Default) -->
-    <style name="Theme.FinanceObserver" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/accent_signature</item>
-        <item name="colorPrimaryVariant">@color/primaryDark</item>
-        <item name="colorOnPrimary">@color/button_text</item>
-        <item name="colorSecondary">@color/accent_signature</item>
-        <item name="colorOnSecondary">@color/button_text</item>
+    <!-- Light Theme (iBank / FinPay inspired) -->
+    <style name="Theme.FinanceObserver" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/primary</item>
+        <item name="colorOnSecondary">@color/white</item>
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/text_primary</item>
-        <item name="colorError">@color/accent_critical</item>
+        <item name="colorError">@color/semantic_red</item>
         <item name="colorOnError">@color/white</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="android:statusBarColor">@color/status_bar</item>
         <item name="android:navigationBarColor">@color/navigation_bar</item>
-        <item name="android:navigationBarDividerColor">@color/border</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="colorControlNormal">@color/text_secondary</item>
-        <item name="colorControlActivated">@color/accent_signature</item>
+        <item name="colorControlActivated">@color/primary</item>
         <item name="colorControlHighlight">@color/ripple</item>
         <item name="android:textColorPrimary">@color/text_primary</item>
         <item name="android:textColorSecondary">@color/text_secondary</item>
         <item name="android:textColorTertiary">@color/text_tertiary</item>
         <item name="android:textColorLink">@color/accent_info</item>
-        <item name="toolbarStyle">@style/Widget.FinanceObserver.Toolbar</item>
-
-        <!-- Material Card defaults -->
         <item name="materialCardViewStyle">@style/Widget.FinanceObserver.Card</item>
-
-        <!-- Bottom Navigation -->
         <item name="bottomNavigationStyle">@style/Widget.FinanceObserver.BottomNav</item>
-    </style>
-
-    <!-- Toolbar -->
-    <style name="Widget.FinanceObserver.Toolbar" parent="Widget.MaterialComponents.Toolbar">
-        <item name="android:background">@color/status_bar</item>
-        <item name="titleTextColor">@color/accent_signature</item>
-        <item name="android:elevation">0dp</item>
     </style>
 
     <!-- Material Card -->
     <style name="Widget.FinanceObserver.Card" parent="Widget.MaterialComponents.CardView">
         <item name="cardBackgroundColor">@color/surface</item>
-        <item name="cardCornerRadius">12dp</item>
+        <item name="cardCornerRadius">16dp</item>
         <item name="cardElevation">0dp</item>
         <item name="strokeColor">@color/border</item>
-        <item name="strokeWidth">0dp</item>
+        <item name="strokeWidth">1dp</item>
     </style>
 
     <!-- Bottom Navigation -->
@@ -57,9 +45,10 @@
         <item name="itemTextColor">@color/bottom_nav_color</item>
         <item name="itemRippleColor">@color/ripple</item>
         <item name="labelVisibilityMode">labeled</item>
-        <item name="elevation">0dp</item>
+        <item name="elevation">8dp</item>
+        <item name="android:paddingTop">8dp</item>
     </style>
 
     <!-- Bottom Nav Color State List -->
-    <color name="bottom_nav_color">#C4A56E</color>
+    <color name="bottom_nav_color">#3629B6</color>
 </resources>

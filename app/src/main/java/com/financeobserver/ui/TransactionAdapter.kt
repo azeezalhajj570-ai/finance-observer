@@ -8,16 +8,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.financeobserver.R
 import com.financeobserver.model.SourceType
 import com.financeobserver.model.Transaction
-import java.text.NumberFormat
+import com.financeobserver.util.CurrencyHelper
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TransactionAdapter(
-    private val transactions: List<Transaction>
+    private val transactions: List<Transaction>,
+    private val onItemClick: ((Transaction) -> Unit)? = null
 ) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
 
     private val dateFormat = SimpleDateFormat("MMM dd, h:mm a", Locale.getDefault())
-    private val currencyFormat = NumberFormat.getCurrencyInstance(Locale.US)
 
     private val categoryColors = mapOf(
         "food" to R.color.cat_food,
@@ -26,6 +26,15 @@ class TransactionAdapter(
         "subscription" to R.color.cat_subscription,
         "streaming" to R.color.cat_streaming,
         "default" to R.color.cat_default
+    )
+
+    private val categoryTextColors = mapOf(
+        "food" to R.color.cat_food_text,
+        "transport" to R.color.cat_transport_text,
+        "shopping" to R.color.cat_shopping_text,
+        "subscription" to R.color.cat_subscription_text,
+        "streaming" to R.color.cat_streaming_text,
+        "default" to R.color.cat_default_text
     )
 
     private fun getCategoryLabel(txn: Transaction): String = when {
@@ -41,14 +50,18 @@ class TransactionAdapter(
     }
 
     private fun getCategoryColor(txn: Transaction): Int {
-        val key = when {
+        val key = getCategoryColorKey(txn)
+        return categoryColors[key] ?: R.color.cat_default
+    }
+
+    private fun getCategoryColorKey(txn: Transaction): String {
+        return when {
             txn.category?.contains("food", true) == true || txn.category?.contains("restaurant", true) == true -> "food"
             txn.category?.contains("transport", true) == true -> "transport"
             txn.category?.contains("shopping", true) == true -> "shopping"
             txn.category?.contains("subscription", true) == true || txn.merchant.contains("Netflix", true) -> "subscription"
             else -> "default"
         }
-        return categoryColors[key] ?: R.color.cat_default
     }
 
     class TransactionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -68,9 +81,10 @@ class TransactionAdapter(
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         val txn = transactions[position]
         val ctx = holder.itemView.context
+        val currency = CurrencyHelper.getSelectedCurrency(ctx)
 
         holder.txnName.text = txn.merchant
-        holder.txnAmount.text = currencyFormat.format(txn.amount)
+        holder.txnAmount.text = CurrencyHelper.formatAmount(txn.amount, currency)
         holder.txnMeta.text = "${dateFormat.format(txn.timestamp)} · ${
             when (txn.source) {
                 SourceType.NOTIFICATION -> "Notification"
@@ -80,13 +94,17 @@ class TransactionAdapter(
         }"
 
         holder.txnCategoryIcon.text = getCategoryLabel(txn)
-        holder.txnCategoryIcon.setTextColor(ctx.getColor(R.color.text_primary))
+        holder.txnCategoryIcon.setTextColor(ctx.getColor(categoryTextColors[getCategoryColorKey(txn)] ?: R.color.cat_default_text))
         holder.txnCategoryBg.background.setTint(ctx.getColor(getCategoryColor(txn)))
 
         if (txn.isFlagged) {
-            holder.txnAmount.setTextColor(ctx.getColor(android.R.color.holo_red_dark))
+            holder.txnAmount.setTextColor(ctx.getColor(R.color.semantic_red))
         } else {
             holder.txnAmount.setTextColor(ctx.getColor(R.color.text_primary))
+        }
+
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(txn)
         }
     }
 
